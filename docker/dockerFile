@@ -1,0 +1,7 @@
+FROM postgres 
+ENV POSTGRES_PASSWORD=361993
+ENV POSTGRES_USER=admin
+ENV POSTGRES_DB=hospital
+EXPOSE 5432/tcp
+VOLUME /var/lib/postgresql/data
+
