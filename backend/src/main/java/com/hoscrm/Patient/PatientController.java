@@ -98,7 +98,8 @@ public class PatientController {
     }
 
     @DeleteMapping(name="delete",
-                    path="/delete"
+                    path="/delete",
+            consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> deletePatient(@RequestBody Ids ids){
         boolean deleted = service.deletePatientsByIds(ids.ids);

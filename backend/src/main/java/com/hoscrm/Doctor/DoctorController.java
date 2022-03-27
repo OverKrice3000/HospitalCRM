@@ -58,7 +58,7 @@ public class DoctorController {
     @GetMapping(name="get",
             path="/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getPatient(@PathVariable(name="id") Long id){
+    public ResponseEntity<?> getDoctor(@PathVariable(name="id") Long id){
         Optional<Doctor> doctor = service.getDoctorById(id);
         if(doctor.isEmpty())
             return ResponseEntity.ok().body(List.of());
@@ -105,7 +105,8 @@ public class DoctorController {
     }
 
     @DeleteMapping(name="delete",
-            path="/delete"
+            path="/delete",
+            consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> deleteDoctor(@RequestBody Ids ids){
         boolean deleted = service.deleteDoctorsByIds(ids.ids);

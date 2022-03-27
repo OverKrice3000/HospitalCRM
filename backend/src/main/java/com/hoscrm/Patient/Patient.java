@@ -35,6 +35,10 @@ public class Patient implements Serializable{
     //TODO: try to delete without set in patient
     //TODO: try to inject aRep in method
     //TODO: SET NULLABLE FALSE AND SEND OBJECT OF NULLS TO DELETE
+    //TODO: validate body for add
+    //TODO: set id in query parameter
+    //TODO: automaticly set number of patients to 0
+    //TODO: set unique
 
     public Set<AppointmentToo> getAppointmentTooSet() {
         return appointmentTooSet;

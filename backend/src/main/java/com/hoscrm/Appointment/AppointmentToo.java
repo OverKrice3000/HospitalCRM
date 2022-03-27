@@ -1,5 +1,6 @@
 package com.hoscrm.Appointment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Patient.Patient;
 
@@ -13,11 +14,13 @@ public class AppointmentToo implements Serializable {
     @EmbeddedId
     private AppointmentIdToo id = new AppointmentIdToo();
 
+    @JsonIgnore
     @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY)
     @JoinColumn(name="doctor", referencedColumnName = "Id")
     @MapsId("doctorId")
     private Doctor doctor;
 
+    @JsonIgnore
     @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
     @JoinColumn(name="patient", referencedColumnName = "Id")
     @MapsId("patientId")
