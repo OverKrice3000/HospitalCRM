@@ -8,23 +8,17 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-/*@Table(name="appointment", uniqueConstraints= {
-        @UniqueConstraint(name = "DoctorAndPatientAppointmentUniqueConstraint", columnNames ={"doctorId", "patientId"})
-})*/
+@IdClass(AppointmentId.class)
 public class Appointment implements Serializable {
-
-    @EmbeddedId
-    AppointmentId id = new AppointmentId();
-
+    @Id
     @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="doctor", referencedColumnName = "Id")
-    @MapsId("doctorId")
-    private Doctor doctor;
+    @JoinColumn(name="doctorId", referencedColumnName = "Id")
+    private Doctor doctorId;
 
+    @Id
     @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="patient", referencedColumnName = "Id")
-    @MapsId("patientId")
-    private Patient patient;
+    @JoinColumn(name="patientId", referencedColumnName = "Id")
+    private Patient patientId;
 
     private LocalDate date;
     private Double cost;
@@ -32,34 +26,26 @@ public class Appointment implements Serializable {
     public Appointment(){}
 
     public Appointment(Doctor doctor, Patient patient, LocalDate date, Double cost) {
-        this.doctor = doctor;
-        this.patient = patient;
+        this.doctorId = doctor;
+        this.patientId = patient;
         this.date = date;
         this.cost = cost;
     }
 
-    public AppointmentId getId() {
-        return id;
+    public Doctor getDoctorId() {
+        return doctorId;
     }
 
-    public void setId(AppointmentId id) {
-        this.id = id;
+    public void setDoctorId(Doctor doctorId) {
+        this.doctorId = doctorId;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
+    public Patient getPatientId() {
+        return patientId;
     }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setPatientId(Patient patientId) {
+        this.patientId = patientId;
     }
 
     public LocalDate getDate() {
@@ -81,8 +67,8 @@ public class Appointment implements Serializable {
     @Override
     public String toString() {
         return "Appointment{" +
-                "doctor=" + doctor +
-                ", patient=" + patient +
+                "doctor=" + doctorId +
+                ", patient=" + patientId +
                 ", date=" + date +
                 ", cost=" + cost +
                 '}';

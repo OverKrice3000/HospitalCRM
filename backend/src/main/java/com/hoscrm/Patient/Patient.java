@@ -1,30 +1,44 @@
 package com.hoscrm.Patient;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.hoscrm.Appointment.Appointment;
+import com.hoscrm.Appointment.AppointmentToo;
+import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 @Entity(name="Patient")
-public class Patient {
+public class Patient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "patientIdSequence")
     @SequenceGenerator(name = "patientIdSequence", sequenceName = "patientidsequence", allocationSize = 1)
-    Long id;
+    private Long id;
+    @ReceiveNotNull
     @Column(
             name = "firstnamecolumn",
           nullable = false
     )
-    String firstName;
+    private String firstName;
+    @ReceiveNotNull
     @Column(
             name = "lastnamecolumn",
             nullable = false
     )
-    String lastName;
-    @Column(
-            name = "agecolumn",
-            nullable = false
-    )
-    Short age;
+    private String lastName;
+    private Short age;
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
+    private Set<AppointmentToo> appointmentTooSet;
+
+    public Set<AppointmentToo> getAppointmentTooSet() {
+        return appointmentTooSet;
+    }
+
+    public void setAppointmentTooSet(Set<AppointmentToo> appointmentTooSet) {
+        this.appointmentTooSet = appointmentTooSet;
+    }
 
     public Patient() {
     }
@@ -39,7 +53,7 @@ public class Patient {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,6 +63,10 @@ public class Patient {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public void setAge(Short age) {
+        this.age = age;
     }
 
     public String getLastName() {
@@ -75,5 +93,15 @@ public class Patient {
                 ", lastName='" + lastName + '\'' +
                 ", age=" + ((age == null) ? "null" : age.shortValue()) +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

@@ -5,11 +5,8 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Embeddable
 public class AppointmentId implements Serializable {
-    @Column(name="doctorId")
     public Long doctorId;
-    @Column(name="patientId")
     public Long patientId;
 
     public AppointmentId(){}
