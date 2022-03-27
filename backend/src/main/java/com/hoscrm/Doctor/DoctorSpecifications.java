@@ -13,7 +13,7 @@ public class DoctorSpecifications {
         return new Specification<Doctor>() {
             @Override
             public Predicate toPredicate(Root<Doctor> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return (salary == null) ? criteriaBuilder.and() : criteriaBuilder.greaterThan(root.get("salary"), salary);
+                return (salary == null) ? criteriaBuilder.and() : criteriaBuilder.greaterThanOrEqualTo(root.get("salary"), salary);
             }
         };
     }

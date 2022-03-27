@@ -11,12 +11,12 @@ import java.time.LocalDate;
 @IdClass(AppointmentId.class)
 public class Appointment implements Serializable {
     @Id
-    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY)
     @JoinColumn(name="doctorId", referencedColumnName = "Id")
     private Doctor doctorId;
 
     @Id
-    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
     @JoinColumn(name="patientId", referencedColumnName = "Id")
     private Patient patientId;
 

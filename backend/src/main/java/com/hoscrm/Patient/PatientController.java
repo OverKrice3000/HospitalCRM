@@ -3,17 +3,12 @@ package com.hoscrm.Patient;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
 import com.hoscrm.annotations.ReceiveNotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpServerErrorException;
 
 import javax.annotation.Resource;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -92,12 +87,22 @@ public class PatientController {
         return ResponseEntity.ok().body(created);
     }
 
+    @PutMapping(name="update",
+                path="/update",
+                produces = MediaType.APPLICATION_JSON_VALUE,
+                consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updatePatients(@RequestBody Patients patients){
+        List<Patient> retPs = service.updatePatients(patients.patients);
+        return (retPs == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Some patients do not exist in database!")) :
+                                ResponseEntity.ok(retPs);
+    }
+
     @DeleteMapping(name="delete",
                     path="/delete"
     )
     public ResponseEntity<?> deletePatient(@RequestBody Ids ids){
-        service.deletePatientsByIds(ids.ids);
-        return ResponseEntity.ok().build();
+        boolean deleted = service.deletePatientsByIds(ids.ids);
+        return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Some patients do not exist in database!"));
     }
 
     static class Ids{

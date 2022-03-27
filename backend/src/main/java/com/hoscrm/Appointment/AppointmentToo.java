@@ -13,12 +13,12 @@ public class AppointmentToo implements Serializable {
     @EmbeddedId
     private AppointmentIdToo id = new AppointmentIdToo();
 
-    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY)
     @JoinColumn(name="doctor", referencedColumnName = "Id")
     @MapsId("doctorId")
     private Doctor doctor;
 
-    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
     @JoinColumn(name="patient", referencedColumnName = "Id")
     @MapsId("patientId")
     private Patient patient;
