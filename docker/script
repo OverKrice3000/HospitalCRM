@@ -1,1 +1,1 @@
-sudo docker run --name pg -p 5432:5432 -e POSTGRES_PASSWORD=361993 -e POSTGRES_USER=admin -e POSTGRES_DB=hospital -v hos-vol-pg:/var/lib/postgresql/data -di postgres
+sudo docker run --name pg -p 5432:5432 -e POSTGRES_PASSWORD=89201 -e POSTGRES_USER=vladus -e POSTGRES_DB=hospital -v hos-vol-pg:/var/lib/postgresql/data -di postgres
