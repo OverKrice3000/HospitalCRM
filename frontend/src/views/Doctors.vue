@@ -32,7 +32,7 @@
 </template>
 
 <script>
-//import axios from "axios";
+import axios from "axios";
 import paginationMixin from '@/mixins/paginat.mixin.js'
 import Table from '@/components/Table'
 import Loader from '@/components/Loader'
@@ -53,20 +53,17 @@ export default {
       {id : 5, name: 'dscsacsac', surname: 'e', age: '20'},
       {id : 72, name: 'kaban', surname: 'kabanov', age: '65'},
     ],
-    headers : ['id', 'Имя', 'Фамилия', 'Специальность', 'Зарплата', 'Отдел', 'Приемов за месяц'],
+    headers : ['id', 'Имя', 'Фамилия', 'Специальность', 'Зарплата', 'Приемов за месяц'],
     recordForEdit: [],
   }),
   mounted(){
-    //const records = 
-    //this.records = records.map()
-    this.setupPagination(this.records);
-    this.loading=false;
+    this.getRecords();
   },
   methods:{
     getRecords(){
-      /* axios.get('/api/records')
+       axios.get('/api/doctor/find')
       .then(response => {
-        this.records = response.data.records
+        this.records = response.data
         this.setupPagination(this.records)
       })
       .catch(error => {
@@ -74,7 +71,7 @@ export default {
       })
       .finally(() => {
         this.loading=false;
-      }) */
+      })
     },
     addRecord(record) {
       console.log('Add - ' + record.date);
@@ -123,11 +120,11 @@ export default {
       let queryLastname = searchingFields.lastname ? `${(queryStart && queryFirstname) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
       let querySpeciality = searchingFields.speciality ? `${(queryStart && (queryFirstname ||  queryLastname)) ? '&' : ''}speciality=${searchingFields.speciality}` : '';
       let querySalary = searchingFields.salary ? `${(queryStart && (queryFirstname ||  queryLastname || querySpeciality)) ? '&' : ''}salary=${searchingFields.salary}` : '';
-      let queryStr = `/api/patient/find${queryStart}${queryFirstname}${queryLastname}${querySpeciality}${querySalary}`;
+      let queryStr = `/api/doctor/find${queryStart}${queryFirstname}${queryLastname}${querySpeciality}${querySalary}`;
       console.log(queryStr);
-       /* axios.get(queryStr)
+      axios.get(queryStr)
       .then(response => {
-        this.records = response.data.records
+        this.records = response.data
         this.setupPagination(this.records)
       })
       .catch(error => {
@@ -135,7 +132,7 @@ export default {
       })
       .finally(() => {
         this.loading=false;
-      }) */
+      })
     },
     pushRecordToForm(recordID){
       console.log(recordID);
