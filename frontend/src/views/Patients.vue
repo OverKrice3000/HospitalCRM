@@ -34,7 +34,7 @@
 </template>
 
 <script>
-//import axios from "axios";
+import axios from "axios";
 import paginationMixin from '@/mixins/paginat.mixin.js'
 import Table from '@/components/Table'
 import Loader from '@/components/Loader'
@@ -59,16 +59,13 @@ export default {
     recordForEdit: [],
   }),
   mounted(){
-    //const records = 
-    //this.records = records.map()
-    this.setupPagination(this.records);
-    this.loading=false;
+    this.getRecords();
   },
   methods:{
-    getRecords(){
-      /* axios.get('/api/records')
+    getRecords() {
+       axios.get('/api/patient/find')
       .then(response => {
-        this.records = response.data.records
+        this.records = response.data
         this.setupPagination(this.records)
       })
       .catch(error => {
@@ -76,14 +73,16 @@ export default {
       })
       .finally(() => {
         this.loading=false;
-      }) */
+      })
     },
     addRecord(record) {
       console.log('Add - ' + record.firstname);
-      /* axios.post('/api/records', {
-        firstname: record.firstname,
-        lastname: record.lastname,
-        age: record.age
+      axios.post('/api/patient/add', { patients: [
+        {
+          firstName: record.firstname,
+          lastName: record.lastname,
+          age: record.age
+        }]
       })
       .then(response => {
         this.getRecords()
@@ -91,14 +90,17 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     editRecord(record) {
-      console.log('Edit- '+ record.id);
-      /* axios.put(`/api/records/${record.id}`, {
-        firstname: record.firstname,
-        lastname: record.lastname,
-        age: record.age
+      console.log('Edit- '+ this.recordForEdit.id + record.firstname + record.lastname + record.age);
+      axios.put(`/api/patient/update`, {
+        patients: [{
+          id: this.recordForEdit.id,
+          firstName: record.firstname,
+          lastName: record.lastname,
+          age: record.age
+        }]
       })
       .then(response => {
         this.getRecords()
@@ -106,28 +108,31 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     deleteRecord(recordId){
       console.log('delete ' + recordId);
-      /* axios.delete(`/api/posts/${recordID}`)
+      axios.delete(`/api/patient/delete`, {
+        data: {
+          ids: [recordId]
+        }
+      })
       .then(response => {
         this.getRecords()
         console.log(response)
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     search(searchingFields) {
       let queryStart = (searchingFields.firstname==='' && searchingFields.lastname==='') ? '' : '?';
       let queryFirstname = searchingFields.firstname ? `firstname=${searchingFields.firstname}` : '';
       let queryLastname = searchingFields.lastname ? `${(queryStart && queryFirstname) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
       let queryStr = `/api/patient/find${queryStart}${queryFirstname}${queryLastname}`;
-      console.log(queryStr);
-       /* axios.get(queryStr)
+       axios.get(queryStr)
       .then(response => {
-        this.records = response.data.records
+        this.records = response.data
         this.setupPagination(this.records)
       })
       .catch(error => {
@@ -135,7 +140,7 @@ export default {
       })
       .finally(() => {
         this.loading=false;
-      }) */
+      })
     },
     pushRecordToForm(recordID){
       console.log(recordID);

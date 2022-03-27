@@ -75,10 +75,14 @@ export default {
     },
     addRecord(record) {
       console.log('Add - ' + record.date);
-      /* axios.post('/api/records', {
-        firstname: record.firstname,
-        lastname: record.lastname,
-        age: record.age
+      axios.post('/api/doctor/add', {
+        doctors: [
+        {
+          firstName: record.firstname,
+          lastName: record.lastname,
+          speciality: record.speciality,
+          salary: record.salary
+        }]
       })
       .then(response => {
         this.getRecords()
@@ -86,14 +90,18 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     editRecord(record) {
       console.log('Edit- '+ record.id);
-      /* axios.put(`/api/records/${record.id}`, {
-        firstname: record.firstname,
-        lastname: record.lastname,
-        age: record.age
+      axios.put(`/api/doctor/update`, {
+        doctors: [{
+          id: this.recordForEdit.id,
+          firstName: record.firstname,
+          lastName: record.lastname,
+          speciality: record.speciality,
+          salary: record.salary
+        }]
       })
       .then(response => {
         this.getRecords()
@@ -101,18 +109,22 @@ export default {
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     deleteRecord(recordId){
       console.log('delete ' + recordId);
-      /* axios.delete(`/api/posts/${recordID}`)
+      axios.delete(`/api/doctor/delete`, {
+        data: {
+          ids: [recordId]
+        }
+      })
       .then(response => {
         this.getRecords()
         console.log(response)
       })
       .catch(error => {
         console.log(error)
-      }) */
+      })
     },
     search(searchingFields) {
       let queryStart = (searchingFields.firstname==='' && searchingFields.lastname==='' && searchingFields.speciality==='' && searchingFields.salary==='') ? '' : '?';

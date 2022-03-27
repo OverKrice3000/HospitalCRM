@@ -15,7 +15,7 @@
       </div>
       <div class="input-field col s2">
         <input v-model="serachFields.salary" id="salary" type="number" class="validate">
-        <label for="salary">Зарплата</label>
+        <label for="salary">Минимальная зарплата</label>
       </div>
         <a @click.prevent = "search" class="btn-floating btn-large waves-effect waves-light purple darken-1 search-btn">
             <i class="material-icons">search</i>

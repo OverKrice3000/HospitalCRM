@@ -47,8 +47,8 @@ export default {
   updated() {
     this.$nextTick(function () {
       if (Object.keys(this.recordForEdit).length !== 0) {
-        this.patientsForm.firstname = this.recordForEdit.name;
-        this.patientsForm.lastname = this.recordForEdit.surname;
+        this.patientsForm.firstname = this.recordForEdit.firstName;
+        this.patientsForm.lastname = this.recordForEdit.lastName;
         this.patientsForm.age = this.recordForEdit.age;
         this.isEdit=true;
       }
@@ -60,7 +60,7 @@ export default {
         if (valid) {
           if (this.isEdit) {
             console.log('edit')
-            this.$emit('editClick', this.recordForEdit);
+            this.$emit('editClick', this.patientsForm);
             this.isEdit = false;
           }
           else {

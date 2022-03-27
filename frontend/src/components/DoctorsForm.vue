@@ -72,7 +72,7 @@ export default {
         if (valid) {
           if (this.isEdit) {
             console.log('edit')
-            this.$emit('editClick', this.recordForEdit);
+            this.$emit('editClick', this.doctorsForm);
             this.isEdit = false;
           }
           else {
