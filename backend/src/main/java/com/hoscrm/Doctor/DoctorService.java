@@ -47,8 +47,6 @@ public class DoctorService {
         Optional<Doctor> found = rep.findById(doctor.getId());
         if(found.isEmpty())
             throw new NoSuchElementInDatabaseException("No doctor entry with such id: " + doctor.getId());
-        if(rep.existsByFirstNameAndLastName(doctor.getFirstName(), doctor.getLastName()))
-            throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
         doctor.setNumberOfPatientsDuringCurrentMonth(found.get().getNumberOfPatientsDuringCurrentMonth());
         return rep.save(doctor);
     }

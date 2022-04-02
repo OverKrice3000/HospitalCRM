@@ -39,8 +39,6 @@ public class PatientService {
     public Patient updatePatient(Patient patient){
         if(!patientRepository.existsById(patient.getId()))
             throw new NoSuchElementInDatabaseException("No patient entry with such id: " + patient.getId());
-        if(patientRepository.existsByFirstNameAndLastName(patient.getFirstName(), patient.getLastName()))
-            throw new ConstraintViolationException("Unique constraint violation: Patient with such first name and last name already exists");
         return patientRepository.save(patient);
     }
 
