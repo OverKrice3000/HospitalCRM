@@ -1,7 +1,10 @@
 package com.hoscrm.Patient;
 
+import com.hoscrm.Exceptions.ConstraintViolationException;
+import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
+import com.hoscrm.Validators.NotNullParameterInRequestValidator;
 import com.hoscrm.annotations.ReceiveNotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,82 +66,40 @@ public class PatientController {
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<?> addPatient(@RequestBody() Patients patients){
+    public ResponseEntity<?> addPatient(@RequestBody Patient patient){
         try{
-            patients.patients.forEach(p -> {
-                p.setId(null);
-                for(Field f: p.getClass().getDeclaredFields()){
-                    boolean accessible = f.canAccess(p);
-                    f.setAccessible(true);
-                    try {
-                        if(f.getAnnotation(ReceiveNotNull.class) != null && f.get(p)== null){
-                            f.setAccessible(accessible);
-                            throw new NotNullParameterAbsentException("Mandatory parameter is missing:  " + f.getName());
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch(NotNullParameterAbsentException e){
+            NotNullParameterInRequestValidator.validate(patient);
+            Patient created = service.addPatient(patient);
+            return ResponseEntity.ok().body(created);
+        } catch(NotNullParameterAbsentException | ConstraintViolationException e){
             return ResponseEntity.status(400).body(Map.of("reason", e.getMessage()));
         }
-        List<Patient> created = service.addPatients(patients.patients);
-        return ResponseEntity.ok().body(created);
     }
 
     @PutMapping(name="update",
                 path="/update",
                 produces = MediaType.APPLICATION_JSON_VALUE,
                 consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updatePatients(@RequestBody Patients patients){
-        List<Patient> retPs = service.updatePatients(patients.patients);
-        return (retPs == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Some patients do not exist in database!")) :
-                                ResponseEntity.ok(retPs);
+    public ResponseEntity<?> updatePatient(@RequestParam(required = true) Long id, @RequestBody Patient patient){
+        patient.setId(id);
+        try{
+            NotNullParameterInRequestValidator.validate(patient);
+            Patient retPs = service.updatePatient(patient);
+            return ResponseEntity.ok(retPs);
+        } catch(NoSuchElementInDatabaseException | NotNullParameterAbsentException | ConstraintViolationException e){
+            return ResponseEntity.status(400).body(Map.of("Reason", e.getMessage()));
+        }
     }
 
     @DeleteMapping(name="delete",
-                    path="/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+                    path="/delete"
     )
-    public ResponseEntity<?> deletePatient(@RequestBody Ids ids){
-        boolean deleted = service.deletePatientsByIds(ids.ids);
-        return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Some patients do not exist in database!"));
-    }
-
-    static class Ids{
-        List<Long> ids;
-
-        public Ids(){}
-
-        public Ids(List<Long> ids) {
-            this.ids = ids;
-        }
-
-        public List<Long> getIds() {
-            return ids;
-        }
-
-        public void setIds(List<Long> ids) {
-            this.ids = ids;
-        }
-    }
-
-    static class Patients{
-        List<Patient> patients;
-
-        Patients(){}
-
-        public Patients(List<Patient> patients) {
-            this.patients = patients;
-        }
-
-        public List<Patient> getPatients() {
-            return patients;
-        }
-
-        public void setPatients(List<Patient> patients) {
-            this.patients = patients;
+    public ResponseEntity<?> deletePatient(@RequestParam(required = true) Long id){
+        try{
+            service.deletePatientById(id);
+            return ResponseEntity.ok().build();
+        } catch(NoSuchElementInDatabaseException e) {
+            return ResponseEntity.status(400).body(Map.of("Reason", e.getMessage()));
         }
     }
 

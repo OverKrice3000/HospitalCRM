@@ -1,7 +1,7 @@
 package com.hoscrm.Doctor;
 
-import com.hoscrm.Patient.Patient;
-import org.springframework.data.domain.Example;
+import com.hoscrm.Exceptions.ConstraintViolationException;
+import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -25,29 +25,32 @@ public class DoctorService {
                 )));
     }
 
-    public List<Doctor> addDoctors(List<Doctor> doctors){
-        return rep.saveAll(doctors);
+    public Doctor addDoctor(Doctor doctor) throws ConstraintViolationException{
+        doctor.setNumberOfPatientsDuringCurrentMonth(0);
+        if(rep.existsByFirstNameAndLastName(doctor.getFirstName(), doctor.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
+        return rep.save(doctor);
     }
 
     public Optional<Doctor> getDoctorById(Long id){
         return rep.findById(id);
     }
 
-    public boolean deleteDoctorsByIds(List<Long> ids){
-        if(!ids.stream().allMatch(i -> {
-            return rep.existsById(i);
-        }))
-            return false;
-        rep.deleteAllById(ids);
-        return true;
+    public void deleteDoctorById(Long id) throws NoSuchElementInDatabaseException{
+        if(!rep.existsById(id))
+            throw new NoSuchElementInDatabaseException("No doctor entry with such id: " + id);
+        rep.deleteById(id);
+
     }
 
-    public List<Doctor> updateDoctors(List<Doctor> doctors){
-        if(!doctors.stream().allMatch(p -> {
-            return rep.existsById(p.getId());
-        }))
-            return null;
-        return rep.saveAll(doctors);
+    public Doctor updateDoctor(Doctor doctor) throws NoSuchElementInDatabaseException, ConstraintViolationException{
+        Optional<Doctor> found = rep.findById(doctor.getId());
+        if(found.isEmpty())
+            throw new NoSuchElementInDatabaseException("No doctor entry with such id: " + doctor.getId());
+        if(rep.existsByFirstNameAndLastName(doctor.getFirstName(), doctor.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
+        doctor.setNumberOfPatientsDuringCurrentMonth(found.get().getNumberOfPatientsDuringCurrentMonth());
+        return rep.save(doctor);
     }
 
 }

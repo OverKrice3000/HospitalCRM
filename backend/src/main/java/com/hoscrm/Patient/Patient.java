@@ -1,5 +1,6 @@
 package com.hoscrm.Patient;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoscrm.Appointment.AppointmentToo;
 import com.hoscrm.annotations.ReceiveNotNull;
@@ -9,6 +10,9 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity(name="Patient")
+@Table(name="patient", uniqueConstraints = {
+        @UniqueConstraint(name="patientNameUniqueConstraint", columnNames = {"firstnamecolumn", "lastnamecolumn"})
+})
 public class Patient implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "patientIdSequence")
@@ -26,19 +30,19 @@ public class Patient implements Serializable{
             nullable = false
     )
     private String lastName;
+    @ReceiveNotNull
+    @Column(
+            name="PatientAgeColumn",
+            nullable=false
+    )
     private Short age;
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AppointmentToo> appointmentTooSet;
-    //TODO: how not ot return specific column
     //TODO: try to delete without set in patient
     //TODO: try to inject aRep in method
     //TODO: SET NULLABLE FALSE AND SEND OBJECT OF NULLS TO DELETE
-    //TODO: validate body for add
-    //TODO: set id in query parameter
-    //TODO: automaticly set number of patients to 0
-    //TODO: set unique
 
     public Set<AppointmentToo> getAppointmentTooSet() {
         return appointmentTooSet;

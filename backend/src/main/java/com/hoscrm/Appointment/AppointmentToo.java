@@ -1,12 +1,15 @@
 package com.hoscrm.Appointment;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hoscrm.Deserializers.JsonDateDeserializer;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Patient.Patient;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 public class AppointmentToo implements Serializable {
@@ -26,12 +29,12 @@ public class AppointmentToo implements Serializable {
     @MapsId("patientId")
     private Patient patient;
 
-    private LocalDate date;
+    private Date date;
     private Double cost;
 
     public AppointmentToo(){}
 
-    public AppointmentToo(Doctor doctor, Patient patient, LocalDate date, Double cost) {
+    public AppointmentToo(Doctor doctor, Patient patient, Date date, Double cost) {
         this.doctor = doctor;
         this.patient = patient;
         this.date = date;
@@ -62,11 +65,12 @@ public class AppointmentToo implements Serializable {
         this.patient = patient;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    public void setDate(Date date) {
         this.date = date;
     }
 

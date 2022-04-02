@@ -1,12 +1,16 @@
 package com.hoscrm.Appointment;
 
 import com.hoscrm.Doctor.Doctor;
+import com.hoscrm.Exceptions.ConstraintViolationException;
+import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
 import com.hoscrm.Patient.Patient;
 import com.hoscrm.Patient.PatientController;
 import com.hoscrm.annotations.ReceiveNotNull;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -62,7 +66,7 @@ public class AppointmentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<?> addAppointment(@RequestBody() AddAppoinmentRequestInfo info){
+    public ResponseEntity<?> addAppointment(@RequestBody AppointmentToo info){
         try{
             for(Field f: info.getClass().getDeclaredFields()){
                 boolean accessible = f.canAccess(info);
@@ -76,11 +80,15 @@ public class AppointmentController {
                     e.printStackTrace();
                 }
             }
-        } catch(NotNullParameterAbsentException e){
+            AppointmentToo created = service.addAppointment(info);
+            return (created == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Appointment with such primary key already exists")) :
+                    ResponseEntity.ok().body(created);
+        }
+        catch(NotNullParameterAbsentException |
+                ConstraintViolationException |
+                NoSuchElementInDatabaseException e){
             return ResponseEntity.status(400).body(Map.of("reason", e.getMessage()));
         }
-        AppointmentToo created = service.addAppointment(info);
-        return ResponseEntity.ok().body(created);
     }
 
     @PutMapping(name="update",
@@ -104,50 +112,31 @@ public class AppointmentController {
 
     static class AddAppoinmentRequestInfo{
         @ReceiveNotNull
-        String doctorFirstName;
+        Long doctorId;
         @ReceiveNotNull
-        String doctorLastName;
+        Long patientId;
         @ReceiveNotNull
-        String patientFirstName;
-        @ReceiveNotNull
-        String patientLastName;
-        @ReceiveNotNull
+        //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate date;
         @ReceiveNotNull
         Double cost;
 
         AddAppoinmentRequestInfo(){}
 
-        public String getDoctorFirstName() {
-            return doctorFirstName;
+        public Long getDoctorId() {
+            return doctorId;
         }
 
-        public void setDoctorFirstName(String doctorFirstName) {
-            this.doctorFirstName = doctorFirstName;
+        public void setDoctorId(Long doctorId) {
+            this.doctorId = doctorId;
         }
 
-        public String getDoctorLastName() {
-            return doctorLastName;
+        public Long getPatientId() {
+            return patientId;
         }
 
-        public void setDoctorLastName(String doctorLastName) {
-            this.doctorLastName = doctorLastName;
-        }
-
-        public String getPatientFirstName() {
-            return patientFirstName;
-        }
-
-        public void setPatientFirstName(String patientFirstName) {
-            this.patientFirstName = patientFirstName;
-        }
-
-        public String getPatientLastName() {
-            return patientLastName;
-        }
-
-        public void setPatientLastName(String patientLastName) {
-            this.patientLastName = patientLastName;
+        public void setPatientId(Long patientId) {
+            this.patientId = patientId;
         }
 
         public LocalDate getDate() {
@@ -166,11 +155,9 @@ public class AppointmentController {
             this.cost = cost;
         }
 
-        public AddAppoinmentRequestInfo(String doctorFirstName, String doctorLastName, String patientFirstName, String patientLastName, LocalDate date, Double cost) {
-            this.doctorFirstName = doctorFirstName;
-            this.doctorLastName = doctorLastName;
-            this.patientFirstName = patientFirstName;
-            this.patientLastName = patientLastName;
+        public AddAppoinmentRequestInfo(Long doctorId, Long patientId, LocalDate date, Double cost) {
+            this.doctorId = doctorId;
+            this.patientId = patientId;
             this.date = date;
             this.cost = cost;
         }

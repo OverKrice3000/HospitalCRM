@@ -1,6 +1,8 @@
 package com.hoscrm.Patient;
 
 import com.hoscrm.Appointment.AppointmentRepository;
+import com.hoscrm.Exceptions.ConstraintViolationException;
+import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -19,29 +21,28 @@ public class PatientService {
         return patientRepository.findAll(Example.of(new Patient(firstName, lastName, age)));
     }
 
-    public List<Patient> addPatients(List<Patient> patients){
-        return patientRepository.saveAll(patients);
+    public Patient addPatient(Patient patient){
+        if(patientRepository.existsByFirstNameAndLastName(patient.getFirstName(), patient.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Patient with such first name and last name already exists");
+        return patientRepository.save(patient);
     }
 
     public Optional<Patient> getPatientById(Long id){
         return patientRepository.findById(id);
     }
 
-    public boolean deletePatientsByIds(List<Long> ids){
-        if(!ids.stream().allMatch(i -> {
-            return patientRepository.existsById(i);
-        }))
-            return false;
-        patientRepository.deleteAllById(ids);
-        return true;
+    public void deletePatientById(Long id){
+        if(!patientRepository.existsById(id))
+            throw new NoSuchElementInDatabaseException("No patient entry with such id: " + id);
+        patientRepository.deleteById(id);
     }
 
-    public List<Patient> updatePatients(List<Patient> patients){
-        if(!patients.stream().allMatch(p -> {
-            return patientRepository.existsById(p.getId());
-        }))
-            return null;
-        return patientRepository.saveAll(patients);
+    public Patient updatePatient(Patient patient){
+        if(!patientRepository.existsById(patient.getId()))
+            throw new NoSuchElementInDatabaseException("No patient entry with such id: " + patient.getId());
+        if(patientRepository.existsByFirstNameAndLastName(patient.getFirstName(), patient.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Patient with such first name and last name already exists");
+        return patientRepository.save(patient);
     }
 
 }

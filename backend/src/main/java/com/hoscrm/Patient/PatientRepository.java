@@ -6,5 +6,5 @@ import java.util.List;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-    List<Patient> findByFirstNameAndLastName(String firstName, String lastName);
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
 }
