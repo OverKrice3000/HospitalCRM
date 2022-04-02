@@ -2,6 +2,7 @@ package com.hoscrm.Appointment;
 
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Doctor.DoctorRepository;
+import com.hoscrm.Doctor.DoctorService;
 import com.hoscrm.Doctor.DoctorSpecifications;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
@@ -23,10 +24,12 @@ public class AppointmentService{
     AppointmentRepository aRep;
     DoctorRepository dRep;
     PatientRepository pRep;
-    public AppointmentService(AppointmentRepository aRep, DoctorRepository dRep, PatientRepository pRep){
+    DoctorService dService;
+    public AppointmentService(AppointmentRepository aRep, DoctorRepository dRep, PatientRepository pRep, DoctorService dService){
         this.aRep = aRep;
         this.dRep = dRep;
         this.pRep = pRep;
+        this.dService = dService;
     }
 
     public List<AppointmentToo> findAppointments(String doctorFirstName, String doctorLastName, String patientFirstName,
@@ -51,6 +54,7 @@ public class AppointmentService{
         if(aRep.existsById(new AppointmentIdToo(d.get().getId(), p.get().getId())))
             throw new ConstraintViolationException("Primary key constraint violation! An appointment with given primary" +
                     " key already exists: {" + info.getId().getDoctorId() + ", " + info.getId().getPatientId() + "}");
+        d.get().setNumberOfPatientsDuringCurrentMonth(d.get().getNumberOfPatientsDuringCurrentMonth() + 1);
         return aRep.save(new AppointmentToo(d.get(), p.get(), info.getDate(), info.getCost()));
     }
 

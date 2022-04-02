@@ -110,58 +110,5 @@ public class AppointmentController {
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Appointment does not exist!"));
     }
 
-    static class AddAppoinmentRequestInfo{
-        @ReceiveNotNull
-        Long doctorId;
-        @ReceiveNotNull
-        Long patientId;
-        @ReceiveNotNull
-        //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        LocalDate date;
-        @ReceiveNotNull
-        Double cost;
-
-        AddAppoinmentRequestInfo(){}
-
-        public Long getDoctorId() {
-            return doctorId;
-        }
-
-        public void setDoctorId(Long doctorId) {
-            this.doctorId = doctorId;
-        }
-
-        public Long getPatientId() {
-            return patientId;
-        }
-
-        public void setPatientId(Long patientId) {
-            this.patientId = patientId;
-        }
-
-        public LocalDate getDate() {
-            return date;
-        }
-
-        public void setDate(LocalDate date) {
-            this.date = date;
-        }
-
-        public Double getCost() {
-            return cost;
-        }
-
-        public void setCost(Double cost) {
-            this.cost = cost;
-        }
-
-        public AddAppoinmentRequestInfo(Long doctorId, Long patientId, LocalDate date, Double cost) {
-            this.doctorId = doctorId;
-            this.patientId = patientId;
-            this.date = date;
-            this.cost = cost;
-        }
-    }
-
 
 }

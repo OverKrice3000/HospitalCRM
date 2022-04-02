@@ -1,6 +1,5 @@
 package com.hoscrm.Patient;
 
-import com.hoscrm.Appointment.AppointmentRepository;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import org.springframework.data.domain.Example;
