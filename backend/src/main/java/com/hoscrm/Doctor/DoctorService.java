@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,10 @@ public class DoctorService {
         Optional<Doctor> found = rep.findById(doctor.getId());
         if(found.isEmpty())
             throw new NoSuchElementInDatabaseException("No doctor entry with such id: " + doctor.getId());
+        Doctor tFound = found.get();
+        if((!Objects.equals(tFound.getFirstName(), doctor.getFirstName()) || !Objects.equals(tFound.getLastName(), doctor.getLastName()))
+                && rep.existsByFirstNameAndLastName(doctor.getFirstName(), doctor.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
         doctor.setNumberOfPatientsDuringCurrentMonth(found.get().getNumberOfPatientsDuringCurrentMonth());
         return rep.save(doctor);
     }

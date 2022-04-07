@@ -7,6 +7,7 @@ import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
 import com.hoscrm.Patient.Patient;
 import com.hoscrm.Patient.PatientController;
+import com.hoscrm.Validators.NotNullParameterInRequestValidator;
 import com.hoscrm.annotations.ReceiveNotNull;
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,18 +69,7 @@ public class AppointmentController {
 
     public ResponseEntity<?> addAppointment(@RequestBody AppointmentToo info){
         try{
-            for(Field f: info.getClass().getDeclaredFields()){
-                boolean accessible = f.canAccess(info);
-                f.setAccessible(true);
-                try {
-                    if(f.getAnnotation(ReceiveNotNull.class) != null && f.get(info)== null){
-                        f.setAccessible(accessible);
-                        throw new NotNullParameterAbsentException("Mandatory parameter is missing:  " + f.getName());
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+            NotNullParameterInRequestValidator.validate(info);
             AppointmentToo created = service.addAppointment(info);
             return (created == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Appointment with such primary key already exists")) :
                     ResponseEntity.ok().body(created);

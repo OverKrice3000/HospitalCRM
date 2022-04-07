@@ -1,11 +1,13 @@
 package com.hoscrm.Patient;
 
+import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,8 +39,13 @@ public class PatientService {
     }
 
     public Patient updatePatient(Patient patient){
-        if(!patientRepository.existsById(patient.getId()))
-            throw new NoSuchElementInDatabaseException("No patient entry with such id: " + patient.getId());
+        Optional<Patient> found = patientRepository.findById(patient.getId());
+        if(found.isEmpty())
+            throw new NoSuchElementInDatabaseException("No doctor entry with such id: " + patient.getId());
+        Patient tFound = found.get();
+        if((!Objects.equals(tFound.getFirstName(), patient.getFirstName()) || !Objects.equals(tFound.getLastName(), patient.getLastName()))
+                && patientRepository.existsByFirstNameAndLastName(patient.getFirstName(), patient.getLastName()))
+            throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
         return patientRepository.save(patient);
     }
 

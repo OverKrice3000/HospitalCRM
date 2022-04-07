@@ -2,6 +2,7 @@ package com.hoscrm.Appointment;
 
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Patient.Patient;
+import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -10,8 +11,10 @@ import java.util.Objects;
 
 @Embeddable
 public class AppointmentIdToo implements Serializable {
+    @ReceiveNotNull
     @Column(name="doctorId")
     public Long doctorId;
+    @ReceiveNotNull
     @Column(name="patientId")
     public Long patientId;
 

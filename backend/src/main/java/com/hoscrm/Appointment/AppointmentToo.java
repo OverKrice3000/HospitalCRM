@@ -1,11 +1,11 @@
 package com.hoscrm.Appointment;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hoscrm.Deserializers.JsonDateDeserializer;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Patient.Patient;
+import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +14,7 @@ import java.util.Date;
 @Entity
 public class AppointmentToo implements Serializable {
 
+    @ReceiveNotNull(deepValidation = true)
     @EmbeddedId
     private AppointmentIdToo id = new AppointmentIdToo();
 
@@ -29,7 +30,9 @@ public class AppointmentToo implements Serializable {
     @MapsId("patientId")
     private Patient patient;
 
+    @ReceiveNotNull
     private Date date;
+    @ReceiveNotNull
     private Double cost;
 
     public AppointmentToo(){}
