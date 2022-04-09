@@ -89,7 +89,7 @@ public class AppointmentController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> deletePatient(@RequestBody AppointmentId id){
-        boolean deleted = service.deleteAppointmentById(id);
+        boolean deleted = service.deleteAppointmentByIdLight(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Appointment does not exist!"));
     }
 
