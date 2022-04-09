@@ -1,8 +1,7 @@
 package com.hoscrm.Doctor;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hoscrm.Appointment.AppointmentToo;
+import com.hoscrm.Appointment.Appointment;
 import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
@@ -35,14 +34,14 @@ public class Doctor implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<AppointmentToo> appointmentTooSet;
+    private Set<Appointment> appointmentSet;
 
-    public Set<AppointmentToo> getAppointmentTooSet() {
-        return appointmentTooSet;
+    public Set<Appointment> getAppointmentTooSet() {
+        return appointmentSet;
     }
 
-    public void setAppointmentTooSet(Set<AppointmentToo> appointmentTooSet) {
-        this.appointmentTooSet = appointmentTooSet;
+    public void setAppointmentTooSet(Set<Appointment> appointmentSet) {
+        this.appointmentSet = appointmentSet;
     }
 
     public Doctor(String firstName, String lastName, String speciality, Double salary) {

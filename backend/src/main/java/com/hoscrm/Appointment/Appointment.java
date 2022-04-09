@@ -1,58 +1,79 @@
 package com.hoscrm.Appointment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.hoscrm.Deserializers.JsonDateDeserializer;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Patient.Patient;
+import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@IdClass(AppointmentId.class)
 public class Appointment implements Serializable {
-    @Id
+
+    @ReceiveNotNull(deepValidation = true)
+    @EmbeddedId
+    private AppointmentId id = new AppointmentId();
+
+    @JsonIgnore
     @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="doctorId", referencedColumnName = "Id")
-    private Doctor doctorId;
+    @JoinColumn(name="doctor", referencedColumnName = "Id")
+    @MapsId("doctorId")
+    private Doctor doctor;
 
-    @Id
+    @JsonIgnore
     @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
-    @JoinColumn(name="patientId", referencedColumnName = "Id")
-    private Patient patientId;
+    @JoinColumn(name="patient", referencedColumnName = "Id")
+    @MapsId("patientId")
+    private Patient patient;
 
-    private LocalDate date;
+    @ReceiveNotNull
+    private Date date;
+    @ReceiveNotNull
     private Double cost;
 
     public Appointment(){}
 
-    public Appointment(Doctor doctor, Patient patient, LocalDate date, Double cost) {
-        this.doctorId = doctor;
-        this.patientId = patient;
+    public Appointment(Doctor doctor, Patient patient, Date date, Double cost) {
+        this.doctor = doctor;
+        this.patient = patient;
         this.date = date;
         this.cost = cost;
     }
 
-    public Doctor getDoctorId() {
-        return doctorId;
+    public AppointmentId getId() {
+        return id;
     }
 
-    public void setDoctorId(Doctor doctorId) {
-        this.doctorId = doctorId;
+    public void setId(AppointmentId id) {
+        this.id = id;
     }
 
-    public Patient getPatientId() {
-        return patientId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setPatientId(Patient patientId) {
-        this.patientId = patientId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-    public LocalDate getDate() {
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -67,8 +88,8 @@ public class Appointment implements Serializable {
     @Override
     public String toString() {
         return "Appointment{" +
-                "doctor=" + doctorId +
-                ", patient=" + patientId +
+                "doctor=" + doctor +
+                ", patient=" + patient +
                 ", date=" + date +
                 ", cost=" + cost +
                 '}';

@@ -3,21 +3,16 @@ package com.hoscrm.Appointment;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Doctor.DoctorRepository;
 import com.hoscrm.Doctor.DoctorService;
-import com.hoscrm.Doctor.DoctorSpecifications;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Patient.Patient;
 import com.hoscrm.Patient.PatientRepository;
-import org.postgresql.util.PSQLException;
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class AppointmentService{
@@ -32,8 +27,8 @@ public class AppointmentService{
         this.dService = dService;
     }
 
-    public List<AppointmentToo> findAppointments(String doctorFirstName, String doctorLastName, String patientFirstName,
-                                                 String patientLastName,LocalDate date, Double cost){
+    public List<Appointment> findAppointments(String doctorFirstName, String doctorLastName, String patientFirstName,
+                                              String patientLastName, LocalDate date, Double cost){
         return aRep.findAll(
                 Specification.where(AppointmentSpecifications.hasEqualDate(date).and(
                         AppointmentSpecifications.hasGreaterCostThan(cost).and(
@@ -44,27 +39,27 @@ public class AppointmentService{
                         )))))));
     }
 
-    public AppointmentToo addAppointment(AppointmentToo info) throws NoSuchElementInDatabaseException{
+    public Appointment addAppointment(Appointment info) throws NoSuchElementInDatabaseException{
         Optional<Doctor> d = dRep.findById(info.getId().getDoctorId());
         Optional<Patient> p = pRep.findById(info.getId().getPatientId());
         if(d.isEmpty())
             throw new NoSuchElementInDatabaseException("No entry for doctor with id: " + info.getId().getDoctorId());
         if(p.isEmpty())
             throw new NoSuchElementInDatabaseException("No entry for patient with id: " + info.getId().getPatientId());
-        if(aRep.existsById(new AppointmentIdToo(d.get().getId(), p.get().getId())))
+        if(aRep.existsById(new AppointmentId(d.get().getId(), p.get().getId())))
             throw new ConstraintViolationException("Primary key constraint violation! An appointment with given primary" +
                     " key already exists: {" + info.getId().getDoctorId() + ", " + info.getId().getPatientId() + "}");
         d.get().setNumberOfPatientsDuringCurrentMonth(d.get().getNumberOfPatientsDuringCurrentMonth() + 1);
-        return aRep.save(new AppointmentToo(d.get(), p.get(), info.getDate(), info.getCost()));
+        return aRep.save(new Appointment(d.get(), p.get(), info.getDate(), info.getCost()));
     }
 
-    public AppointmentToo updateAppointment(AppointmentToo appointment){
+    public Appointment updateAppointment(Appointment appointment){
         if(aRep.existsById(appointment.getId()))
             return aRep.save(appointment);
         return null;
     }
 
-    public boolean deleteAppointmentById(AppointmentIdToo id){
+    public boolean deleteAppointmentById(AppointmentId id){
         if(!aRep.existsById(id))
             return false;
         aRep.deleteById(id);

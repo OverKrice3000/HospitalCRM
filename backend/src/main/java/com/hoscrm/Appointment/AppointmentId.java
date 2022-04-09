@@ -1,12 +1,19 @@
 package com.hoscrm.Appointment;
 
+import com.hoscrm.annotations.ReceiveNotNull;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Embeddable
 public class AppointmentId implements Serializable {
+    @ReceiveNotNull
+    @Column(name="doctorId")
     public Long doctorId;
+    @ReceiveNotNull
+    @Column(name="patientId")
     public Long patientId;
 
     public AppointmentId(){}
@@ -45,4 +52,3 @@ public class AppointmentId implements Serializable {
         return Objects.hash(doctorId, patientId);
     }
 }
-

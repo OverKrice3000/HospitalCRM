@@ -1,17 +1,11 @@
 package com.hoscrm.Appointment;
 
-import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
-import com.hoscrm.Patient.Patient;
-import com.hoscrm.Patient.PatientController;
 import com.hoscrm.Validators.NotNullParameterInRequestValidator;
-import com.hoscrm.annotations.ReceiveNotNull;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -67,10 +60,10 @@ public class AppointmentController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
 
-    public ResponseEntity<?> addAppointment(@RequestBody AppointmentToo info){
+    public ResponseEntity<?> addAppointment(@RequestBody Appointment info){
         try{
             NotNullParameterInRequestValidator.validate(info);
-            AppointmentToo created = service.addAppointment(info);
+            Appointment created = service.addAppointment(info);
             return (created == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Appointment with such primary key already exists")) :
                     ResponseEntity.ok().body(created);
         }
@@ -85,8 +78,8 @@ public class AppointmentController {
             path="/update",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateAppointment(@RequestBody AppointmentToo appointment){
-        AppointmentToo retPs = service.updateAppointment(appointment);
+    public ResponseEntity<?> updateAppointment(@RequestBody Appointment appointment){
+        Appointment retPs = service.updateAppointment(appointment);
         return (retPs == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Appointment does not exist in database")) :
                 ResponseEntity.ok(retPs);
     }
@@ -95,7 +88,7 @@ public class AppointmentController {
             path="/delete",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<?> deletePatient(@RequestBody AppointmentIdToo id){
+    public ResponseEntity<?> deletePatient(@RequestBody AppointmentId id){
         boolean deleted = service.deleteAppointmentById(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Appointment does not exist!"));
     }

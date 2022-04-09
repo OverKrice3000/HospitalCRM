@@ -1,8 +1,7 @@
 package com.hoscrm.Patient;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.hoscrm.Appointment.AppointmentToo;
+import com.hoscrm.Appointment.Appointment;
 import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
@@ -39,17 +38,17 @@ public class Patient implements Serializable{
 
     @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<AppointmentToo> appointmentTooSet;
+    private Set<Appointment> appointmentSet;
     //TODO: try to delete without set in patient
     //TODO: try to inject aRep in method
     //TODO: SET NULLABLE FALSE AND SEND OBJECT OF NULLS TO DELETE
 
-    public Set<AppointmentToo> getAppointmentTooSet() {
-        return appointmentTooSet;
+    public Set<Appointment> getAppointmentTooSet() {
+        return appointmentSet;
     }
 
-    public void setAppointmentTooSet(Set<AppointmentToo> appointmentTooSet) {
-        this.appointmentTooSet = appointmentTooSet;
+    public void setAppointmentTooSet(Set<Appointment> appointmentSet) {
+        this.appointmentSet = appointmentSet;
     }
 
     public Patient() {
