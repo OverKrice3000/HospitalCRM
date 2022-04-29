@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MedicationRepository extends JpaRepository<Medication, Long>, JpaSpecificationExecutor<Medication> {
     boolean existsByName(String name);
+    boolean existsByNameAndVendor(String name, String vendor);
 }

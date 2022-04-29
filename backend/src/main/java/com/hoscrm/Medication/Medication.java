@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name="nameVendorUniqueConstraint", columnNames = {"MedicationName", "MedicationVendor"})})
 public class Medication {
 
     @Id
@@ -18,7 +19,7 @@ public class Medication {
     private Long id;
 
     @ReceiveNotNull
-    @Column(name="MedicationName", unique = true, nullable = false)
+    @Column(name="MedicationName", nullable = false)
     private String name;
 
     @ReceiveNotNull

@@ -1,7 +1,5 @@
 package com.hoscrm.Supply;
 
-import com.hoscrm.Supply.Supply;
-import com.hoscrm.Supply.SupplyService;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,13 +33,13 @@ public class SupplyController {
     @GetMapping(name="find",
             path="/find",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findSupply(@RequestParam(name="medicament", required = false) String medicament,
+    public ResponseEntity<?> findSupply(@RequestParam(name="medication", required = false) String medicament,
                                             @RequestParam(name="department", required = false) String department,
                                             @RequestParam(name="date", required = false) LocalDate date,
                                             @RequestParam(name="cost", required = false) Double cost){
         try{
             request.getParameterMap().forEach((s, ss) -> {
-                if(!List.of("medicament",
+                if(!List.of("medication",
                         "department",
                         "date",
                         "cost").contains(s))
@@ -77,21 +74,20 @@ public class SupplyController {
             path="/update",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateSupply(@RequestBody Supply Supply){
-        Supply retPs = service.updateSupply(Supply);
+    public ResponseEntity<?> updateSupply(@RequestParam Long id, @RequestBody Supply supply){
+        supply.setId(id);
+        Supply retPs = service.updateSupply(supply);
         return (retPs == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Supply does not exist in database")) :
                 ResponseEntity.ok(retPs);
     }
 
     @DeleteMapping(name="delete",
-            path="/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            path="/delete"
     )
-    public ResponseEntity<?> deletePatient(@RequestBody Long id){
+    public ResponseEntity<?> deleteSupply(@RequestParam(required = true) Long id){
         boolean deleted = service.deleteSupplyById(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Supply does not exist!"));
     }
-
 
 }
 

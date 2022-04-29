@@ -17,4 +17,8 @@ public interface SupplyService {
 
         boolean deleteSupplyByIdLight(Long id);
 
+        void updateAllByMedicationId(Long id);
+
+        void deleteAllByMedicationId(Long id);
+
 }

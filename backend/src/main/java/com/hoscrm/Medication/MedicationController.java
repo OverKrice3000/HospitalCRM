@@ -74,17 +74,17 @@ public class MedicationController {
             path="/update",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateMedication(@RequestBody Medication Medication){
-        Medication retPs = service.updateMedication(Medication);
+    public ResponseEntity<?> updateMedication(@RequestParam Long id, @RequestBody Medication medication){
+        medication.setId(id);
+        Medication retPs = service.updateMedication(medication);
         return (retPs == null) ? ResponseEntity.status(400).body(Map.of("Reason", "Medication does not exist in database")) :
                 ResponseEntity.ok(retPs);
     }
 
     @DeleteMapping(name="delete",
-            path="/delete",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            path="/delete"
     )
-    public ResponseEntity<?> deletePatient(@RequestBody Long id){
+    public ResponseEntity<?> deletePatient(@RequestParam Long id){
         boolean deleted = service.deleteMedicationById(id);
         return deleted ? ResponseEntity.ok().build() : ResponseEntity.status(400).body(Map.of("Reason", "Medication does not exist!"));
     }
