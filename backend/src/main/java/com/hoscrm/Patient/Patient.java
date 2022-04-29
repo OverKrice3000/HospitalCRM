@@ -43,14 +43,6 @@ public class Patient implements Serializable{
     //TODO: try to inject aRep in method
     //TODO: SET NULLABLE FALSE AND SEND OBJECT OF NULLS TO DELETE
 
-    public Set<Appointment> getAppointmentTooSet() {
-        return appointmentSet;
-    }
-
-    public void setAppointmentTooSet(Set<Appointment> appointmentSet) {
-        this.appointmentSet = appointmentSet;
-    }
-
     public Patient() {
     }
 

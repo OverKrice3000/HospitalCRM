@@ -19,13 +19,13 @@ public class Appointment implements Serializable {
     private AppointmentId id = new AppointmentId();
 
     @JsonIgnore
-    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Doctor.class, fetch = FetchType.EAGER)
     @JoinColumn(name="doctor", referencedColumnName = "Id")
     @MapsId("doctorId")
     private Doctor doctor;
 
     @JsonIgnore
-    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.EAGER)
     @JoinColumn(name="patient", referencedColumnName = "Id")
     @MapsId("patientId")
     private Patient patient;

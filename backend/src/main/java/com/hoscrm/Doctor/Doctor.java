@@ -2,6 +2,7 @@ package com.hoscrm.Doctor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hoscrm.Appointment.Appointment;
+import com.hoscrm.Department.Department;
 import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
@@ -31,25 +32,22 @@ public class Doctor implements Serializable {
     @Column(name = "DoctorSalaryColumn", nullable = false)
     private Double salary;
     private Integer numberOfPatientsDuringCurrentMonth;
+    @ReceiveNotNull
+    @JoinColumn(referencedColumnName = "id", name="DoctorDepartment", nullable = false)
+    @ManyToOne(targetEntity = Department.class, fetch = FetchType.EAGER)
+    private Department department;
 
     @JsonIgnore
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Appointment> appointmentSet;
 
-    public Set<Appointment> getAppointmentTooSet() {
-        return appointmentSet;
-    }
-
-    public void setAppointmentTooSet(Set<Appointment> appointmentSet) {
-        this.appointmentSet = appointmentSet;
-    }
-
-    public Doctor(String firstName, String lastName, String speciality, Double salary) {
+    public Doctor(String firstName, String lastName, String speciality, Double salary, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.speciality = speciality;
         this.salary = salary;
         this.numberOfPatientsDuringCurrentMonth = 0;
+        this.department = department;
     }
 
     public Doctor(){}
@@ -100,6 +98,22 @@ public class Doctor implements Serializable {
 
     public void setNumberOfPatientsDuringCurrentMonth(Integer numberOfPatientsDuringCurrentMonth) {
         this.numberOfPatientsDuringCurrentMonth = numberOfPatientsDuringCurrentMonth;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Set<Appointment> getAppointmentSet() {
+        return appointmentSet;
+    }
+
+    public void setAppointmentSet(Set<Appointment> appointmentSet) {
+        this.appointmentSet = appointmentSet;
     }
 
     @Override
