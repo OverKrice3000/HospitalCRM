@@ -37,18 +37,20 @@ public class PatientController {
     @ResponseBody
     public ResponseEntity<?> findPatients(@RequestParam(name="firstname", required = false) String firstName,
                                                         @RequestParam(name="lastname", required = false) String lastName,
-                                                        @RequestParam(name="age", required = false) Short age){
+                                                        @RequestParam(name="age", required = false) Short age,
+                                                        @RequestParam(name="department", required = false) String department){
         try{
             request.getParameterMap().forEach((s, ss) -> {
                 if(!List.of("firstname",
                         "lastname",
-                        "age").contains(s))
+                        "age",
+                        "department").contains(s))
                     throw new UnexpectedUrlParameterException("Unexpected url parameter: " + s);
             });
         } catch (UnexpectedUrlParameterException e){
             return ResponseEntity.status(400).body(Map.of("reason", e.getMessage()));
         }
-        return ResponseEntity.ok(service.findPatients(firstName, lastName, age));
+        return ResponseEntity.ok(service.findPatients(firstName, lastName, age, department));
     }
 
     @GetMapping(name="get",

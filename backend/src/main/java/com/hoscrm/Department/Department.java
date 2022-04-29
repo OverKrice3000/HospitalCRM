@@ -21,10 +21,13 @@ public class Department {
     @Column(name = "departmentName", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "departmentPatients", nullable = false)
     private Integer numberOfPatientsDuringMonth;
 
+    @Column(name = "departmentIncome", nullable = false)
     private Double incomeDuringMonth;
 
+    @Column(name = "departmentCost", nullable = false)
     private Double consumptionDuringMonth;
 
     @JsonIgnore

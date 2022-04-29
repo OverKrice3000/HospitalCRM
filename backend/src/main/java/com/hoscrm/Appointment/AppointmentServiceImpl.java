@@ -2,12 +2,11 @@ package com.hoscrm.Appointment;
 
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Doctor.DoctorRepository;
-import com.hoscrm.Doctor.DoctorService;
+import com.hoscrm.Doctor.DoctorServiceImpl;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Patient.Patient;
 import com.hoscrm.Patient.PatientRepository;
-import com.hoscrm.annotations.Profiling;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     AppointmentRepository aRep;
     DoctorRepository dRep;
     PatientRepository pRep;
-    DoctorService dService;
-    public AppointmentServiceImpl(AppointmentRepository aRep, DoctorRepository dRep, PatientRepository pRep, DoctorService dService){
+    DoctorServiceImpl dService;
+    public AppointmentServiceImpl(AppointmentRepository aRep, DoctorRepository dRep, PatientRepository pRep, DoctorServiceImpl dService){
         this.aRep = aRep;
         this.dRep = dRep;
         this.pRep = pRep;
@@ -29,15 +28,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     public List<Appointment> findAppointments(String doctorFirstName, String doctorLastName, String patientFirstName,
-                                              String patientLastName, LocalDate date, Double cost){
+                                              String patientLastName, LocalDate date, Double cost, String department){
         return aRep.findAll(
                 Specification.where(AppointmentSpecifications.hasEqualDate(date).and(
                         AppointmentSpecifications.hasGreaterCostThan(cost).and(
                         AppointmentSpecifications.hasEqualDoctorFirstName(doctorFirstName).and(
                         AppointmentSpecifications.hasEqualDoctorLastName(doctorLastName).and(
                         AppointmentSpecifications.hasEqualPatientFirstName(patientFirstName).and(
-                        AppointmentSpecifications.hasEqualPatientLastName(patientLastName)
-                        )))))));
+                        AppointmentSpecifications.hasEqualPatientLastName(patientLastName).and(
+                        AppointmentSpecifications.hasEqualDepartment(department)
+                        ))))))));
     }
 
     public Appointment addAppointment(Appointment info) throws NoSuchElementInDatabaseException{

@@ -1,5 +1,6 @@
 package com.hoscrm.Appointment;
 
+import com.hoscrm.Doctor.Doctor;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -60,6 +61,15 @@ public class AppointmentSpecifications {
             @Override
             public Predicate toPredicate(Root<Appointment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 return (date == null) ? criteriaBuilder.and() : criteriaBuilder.equal(root.get("date"), date);
+            }
+        };
+    }
+
+    public static Specification<Appointment> hasEqualDepartment(String department){
+        return new Specification<Appointment>() {
+            @Override
+            public Predicate toPredicate(Root<Appointment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return (department == null) ? criteriaBuilder.and() : criteriaBuilder.equal(root.get("doctor").get("department").get("name"), department);
             }
         };
     }
