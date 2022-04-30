@@ -1,10 +1,7 @@
 package com.hoscrm.Medication;
 
-import com.hoscrm.Doctor.DoctorRepository;
-import com.hoscrm.Doctor.DoctorService;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
-import com.hoscrm.Patient.PatientRepository;
 import com.hoscrm.Supply.SupplyService;
 import com.hoscrm.Supply.SupplyServiceImpl;
 import org.springframework.data.jpa.domain.Specification;

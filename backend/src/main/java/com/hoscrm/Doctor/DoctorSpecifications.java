@@ -1,5 +1,6 @@
 package com.hoscrm.Doctor;
 
+import com.hoscrm.Department.Department;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -44,4 +45,14 @@ public class DoctorSpecifications {
             }
         };
     }
+
+    public static Specification<Doctor> hasEqualDepartment(String department){
+        return new Specification<Doctor>() {
+            @Override
+            public Predicate toPredicate(Root<Doctor> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return (department == null) ? criteriaBuilder.and() : criteriaBuilder.equal(root.get("department").get("name"), department);
+            }
+        };
+    }
+
 }

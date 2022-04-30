@@ -4,6 +4,7 @@ import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,16 @@ public class PatientService {
         this.patientRepository = patientRepository;
     }
 
-    public List<Patient> findPatients(String firstName, String lastName, Short age){
-        return patientRepository.findAll(Example.of(new Patient(firstName, lastName, age)));
+    public List<Patient> findPatients(String firstName, String lastName, Short age, String department){
+        return patientRepository.findAll(
+                Specification.where(PatientSpecifications.hasEqualFirstName(firstName).and(
+                        PatientSpecifications.hasEqualLastName(lastName).and(
+                                PatientSpecifications.hasEqualAge(age).and(
+                                        PatientSpecifications.hasEqualDepartment(department)
+                                )
+                        )
+                ))
+        );
     }
 
     public Patient addPatient(Patient patient){

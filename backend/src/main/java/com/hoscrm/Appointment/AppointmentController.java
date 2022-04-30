@@ -38,7 +38,8 @@ public class AppointmentController {
                                              @RequestParam(name="patientfirstname", required = false) String patientFirstName,
                                              @RequestParam(name="patientlastname", required = false) String patientLastName,
                                              @RequestParam(name="date", required = false) LocalDate date,
-                                             @RequestParam(name="cost", required = false) Double minimumCost){
+                                             @RequestParam(name="cost", required = false) Double minimumCost,
+                                             @RequestParam(name="department", required = false) String department){
         try{
             request.getParameterMap().forEach((s, ss) -> {
                 if(!List.of("doctorfirstname",
@@ -46,13 +47,14 @@ public class AppointmentController {
                         "patientfirstname",
                         "patientlastname",
                         "date",
-                        "cost").contains(s))
+                        "cost",
+                        "department").contains(s))
                     throw new UnexpectedUrlParameterException("Unexpected url parameter: " + s);
             });
         } catch (UnexpectedUrlParameterException e){
             return ResponseEntity.status(400).body(Map.of("reason", e.getMessage()));
         }
-        return ResponseEntity.ok(service.findAppointments(doctorFirstName, doctorLastName, patientFirstName, patientLastName, date, minimumCost));
+        return ResponseEntity.ok(service.findAppointments(doctorFirstName, doctorLastName, patientFirstName, patientLastName, date, minimumCost, department));
     }
 
     @PostMapping(name="add",

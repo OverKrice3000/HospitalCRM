@@ -4,11 +4,7 @@ import com.hoscrm.Exceptions.ConstraintViolationException;
 import com.hoscrm.Exceptions.NoSuchElementInDatabaseException;
 import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
-import com.hoscrm.Patient.Patient;
-import com.hoscrm.Patient.PatientController;
 import com.hoscrm.Validators.NotNullParameterInRequestValidator;
-import com.hoscrm.annotations.ReceiveNotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,11 +20,11 @@ import java.util.Optional;
 @RequestMapping(path="/api/doctor")
 public class DoctorController {
 
-    private DoctorService service;
+    private DoctorServiceImpl service;
     @Resource
     private HttpServletRequest request;
 
-    public DoctorController(DoctorService service){
+    public DoctorController(DoctorServiceImpl service){
         this.service = service;
     }
 
@@ -42,19 +35,21 @@ public class DoctorController {
     public ResponseEntity<?> findDoctors(@RequestParam(name="firstname", required = false) String firstName,
                                          @RequestParam(name="lastname", required = false) String lastName,
                                          @RequestParam(name="speciality", required = false) String speciality,
-                                         @RequestParam(name="salary", required = false) Integer minimalSalary) throws NoSuchMethodException {
+                                         @RequestParam(name="salary", required = false) Integer minimalSalary,
+                                         @RequestParam(name="department", required = false) String department) throws NoSuchMethodException {
         try{
             request.getParameterMap().forEach((s, ss) -> {
                 if(!List.of("firstname",
                         "lastname",
                         "speciality",
-                        "salary").contains(s))
+                        "salary",
+                        "department").contains(s))
                     throw new UnexpectedUrlParameterException("Unexpected url parameter: " + s);
             });
         } catch (UnexpectedUrlParameterException e){
             return ResponseEntity.status(400).body(Map.of("reason", e.getMessage()));
         }
-        return ResponseEntity.ok(service.findDoctors(firstName, lastName, speciality, minimalSalary));
+        return ResponseEntity.ok(service.findDoctors(firstName, lastName, speciality, minimalSalary, department));
     }
 
 
