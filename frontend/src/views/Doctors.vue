@@ -44,16 +44,8 @@ export default {
   data: () => ({
     loading: true,
     showEditForm: false,
-    records: [
-      {id : 0, name: 'dcscscs', surname: 'hcxscsxcsx', age: '20'},
-      {id : 1, name: 'dscxs', surname: 'ycx', age: '20'},
-      {id : 2, name: 'dscxs', surname: 'zcscxs', age: '20'},
-      {id : 3, name: 'dscxs', surname: 'kcsx', age: '20'},
-      {id : 4, name: 'dscsa', surname: 'fcxsacsc', age: '20'},
-      {id : 5, name: 'dscsacsac', surname: 'e', age: '20'},
-      {id : 72, name: 'kaban', surname: 'kabanov', age: '65'},
-    ],
-    headers : ['id', 'Имя', 'Фамилия', 'Специальность', 'Зарплата', 'Приемов за месяц'],
+    records: [],
+    headers : ['id', 'Имя', 'Фамилия', 'Специальность', 'Зарплата', 'Приемов за месяц', 'Отдел'],
     recordForEdit: [],
   }),
   mounted(){
@@ -63,7 +55,16 @@ export default {
     getRecords(){
        axios.get('/api/doctor/find')
       .then(response => {
-        this.records = response.data
+        response.data.forEach(item => {
+          this.records.push({
+          id: item.id,
+          firstName: item.firstName,
+          lastName: item.lastName,
+          speciality: item.speciality,
+          salary: item.salary,
+          numberOfPatientsDuringCurrentMonth: item.numberOfPatientsDuringCurrentMonth,
+          department: item.department.name})
+        });
         this.setupPagination(this.records)
       })
       .catch(error => {
@@ -76,13 +77,10 @@ export default {
     addRecord(record) {
       console.log('Add - ' + record.date);
       axios.post('/api/doctor/add', {
-        doctors: [
-        {
           firstName: record.firstname,
           lastName: record.lastname,
           speciality: record.speciality,
           salary: record.salary
-        }]
       })
       .then(response => {
         this.getRecords()
@@ -94,14 +92,11 @@ export default {
     },
     editRecord(record) {
       console.log('Edit- '+ record.id);
-      axios.put(`/api/doctor/update`, {
-        doctors: [{
-          id: this.recordForEdit.id,
+      axios.put(`/api/doctor/update?id=${this.recordForEdit.id}`, {
           firstName: record.firstname,
           lastName: record.lastname,
           speciality: record.speciality,
           salary: record.salary
-        }]
       })
       .then(response => {
         this.getRecords()
@@ -113,11 +108,7 @@ export default {
     },
     deleteRecord(recordId){
       console.log('delete ' + recordId);
-      axios.delete(`/api/doctor/delete`, {
-        data: {
-          ids: [recordId]
-        }
-      })
+      axios.delete(`/api/doctor/delete?id=${recordId}`)
       .then(response => {
         this.getRecords()
         console.log(response)

@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table class="data-table highlight">
     <thead>
       <tr>
         <th v-for="(head, index) in headers" :key="index">{{head}}</th>
@@ -52,3 +52,57 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.data-table {
+	border: none;
+	margin-top: 20px;
+	border-collapse: separate;
+}
+
+.data-table thead th {
+  font-weight: bold;
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	background: #ede7f6 ;
+	font-size: 16px;
+	border-top: 1px solid #b39ddb ;
+}
+
+.data-table tr th:first-child, .data-table tr td:first-child {
+	border-left: 1px solid #b39ddb ;
+}
+
+.data-table tr th:last-child, .data-table tr td:last-child {
+	border-right: 1px solid #b39ddb 
+}
+
+.data-table thead tr th:first-child {
+	border-radius: 30px 0 0 0;
+}
+
+.data-table thead tr th:last-child {
+	border-radius: 0 30px 0 0;
+}
+
+.data-table tbody td {
+	text-align: left;
+	border: none;
+	padding: 10px 15px;
+	font-size: 16px;
+	vertical-align: top;
+}
+
+.data-table tbody tr:last-child td{
+	border-bottom: 1px solid #b39ddb;
+}
+
+.data-table tbody tr:last-child td:first-child {
+	border-radius: 0 0 0 30px;
+}
+
+.data-table tbody tr:last-child td:last-child {
+	border-radius: 0 0 30px 0;
+}
+</style>

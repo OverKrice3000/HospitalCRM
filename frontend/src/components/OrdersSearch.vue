@@ -30,8 +30,8 @@ export default{
 		serachFields: {
 			patientFirstname: '',
 			patientLastname: '',
-      doctorFirstname: '',
-      doctorLastname: '',
+            doctorFirstname: '',
+            doctorLastname: '',
 		}
   }),
 	methods:{

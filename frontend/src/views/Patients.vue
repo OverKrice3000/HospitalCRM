@@ -46,15 +46,7 @@ export default {
   data: () => ({
     loading: true,
     showEditForm: false,
-    records: [
-      {id : 0, name: 'dcscscs', surname: 'hcxscsxcsx', age: '20'},
-      {id : 1, name: 'dscxs', surname: 'ycx', age: '20'},
-      {id : 2, name: 'dscxs', surname: 'zcscxs', age: '20'},
-      {id : 3, name: 'dscxs', surname: 'kcsx', age: '20'},
-      {id : 4, name: 'dscsa', surname: 'fcxsacsc', age: '20'},
-      {id : 5, name: 'dscsacsac', surname: 'e', age: '20'},
-      {id : 72, name: 'kaban', surname: 'kabanov', age: '65'},
-    ],
+    records: [],
     headers : ['id', 'Имя', 'Фамилия', 'Возраст'],
     recordForEdit: [],
   }),
@@ -66,7 +58,7 @@ export default {
        axios.get('/api/patient/find')
       .then(response => {
         this.records = response.data
-        this.setupPagination(this.records)
+        this.setupPagination(this.records);
       })
       .catch(error => {
         console.log(error);
@@ -77,12 +69,10 @@ export default {
     },
     addRecord(record) {
       console.log('Add - ' + record.firstname);
-      axios.post('/api/patient/add', { patients: [
-        {
+      axios.post('/api/patient/add', { 
           firstName: record.firstname,
           lastName: record.lastname,
           age: record.age
-        }]
       })
       .then(response => {
         this.getRecords()
@@ -94,13 +84,10 @@ export default {
     },
     editRecord(record) {
       console.log('Edit- '+ this.recordForEdit.id + record.firstname + record.lastname + record.age);
-      axios.put(`/api/patient/update`, {
-        patients: [{
-          id: this.recordForEdit.id,
-          firstName: record.firstname,
-          lastName: record.lastname,
-          age: record.age
-        }]
+      axios.put(`/api/patient/update?id=${this.recordForEdit.id}`, {
+        firstName: record.firstname,
+        lastName: record.lastname,
+        age: record.age
       })
       .then(response => {
         this.getRecords()
@@ -112,11 +99,7 @@ export default {
     },
     deleteRecord(recordId){
       console.log('delete ' + recordId);
-      axios.delete(`/api/patient/delete`, {
-        data: {
-          ids: [recordId]
-        }
-      })
+      axios.delete(`/api/patient/delete?id=${recordId}`)
       .then(response => {
         this.getRecords()
         console.log(response)
