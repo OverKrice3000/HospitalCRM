@@ -47,6 +47,7 @@ export default {
     records: [],
     headers : ['id', 'Имя', 'Фамилия', 'Специальность', 'Зарплата', 'Приемов за месяц', 'Отдел'],
     recordForEdit: [],
+    departmentIDS: [],
   }),
   mounted(){
     this.getRecords();
@@ -55,7 +56,10 @@ export default {
     getRecords(){
        axios.get('/api/doctor/find')
       .then(response => {
+        this.records = [];
+        this.departmentIDS = [];
         response.data.forEach(item => {
+          this.departmentIDS.push({id: item.department.id, name: item.department.name})
           this.records.push({
           id: item.id,
           firstName: item.firstName,
@@ -63,7 +67,8 @@ export default {
           speciality: item.speciality,
           salary: item.salary,
           numberOfPatientsDuringCurrentMonth: item.numberOfPatientsDuringCurrentMonth,
-          department: item.department.name})
+          department: item.department.name
+          })
         });
         this.setupPagination(this.records)
       })
@@ -75,12 +80,17 @@ export default {
       })
     },
     addRecord(record) {
-      console.log('Add - ' + record.date);
+      console.log('Add - ' + record);
+      let departmentId = this.departmentIDS.find(department => department.name === record.department).id;
+      console.log(departmentId);
       axios.post('/api/doctor/add', {
           firstName: record.firstname,
           lastName: record.lastname,
           speciality: record.speciality,
-          salary: record.salary
+          salary: record.salary,
+          department: {
+            id: departmentId,
+          }
       })
       .then(response => {
         this.getRecords()
@@ -92,11 +102,15 @@ export default {
     },
     editRecord(record) {
       console.log('Edit- '+ record.id);
+      let departmentId = this.departmentIDS.find(department => department.name === record.department).id;
       axios.put(`/api/doctor/update?id=${this.recordForEdit.id}`, {
           firstName: record.firstname,
           lastName: record.lastname,
           speciality: record.speciality,
-          salary: record.salary
+          salary: record.salary,
+          department: {
+            id: departmentId,
+          }
       })
       .then(response => {
         this.getRecords()
@@ -118,16 +132,27 @@ export default {
       })
     },
     search(searchingFields) {
-      let queryStart = (searchingFields.firstname==='' && searchingFields.lastname==='' && searchingFields.speciality==='' && searchingFields.salary==='') ? '' : '?';
-      let queryFirstname = searchingFields.firstname ? `firstname=${searchingFields.firstname}` : '';
-      let queryLastname = searchingFields.lastname ? `${(queryStart && queryFirstname) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
-      let querySpeciality = searchingFields.speciality ? `${(queryStart && (queryFirstname ||  queryLastname)) ? '&' : ''}speciality=${searchingFields.speciality}` : '';
-      let querySalary = searchingFields.salary ? `${(queryStart && (queryFirstname ||  queryLastname || querySpeciality)) ? '&' : ''}salary=${searchingFields.salary}` : '';
-      let queryStr = `/api/doctor/find${queryStart}${queryFirstname}${queryLastname}${querySpeciality}${querySalary}`;
+      let queryStart = (searchingFields.department==='' && searchingFields.lastname==='' && searchingFields.speciality==='' && searchingFields.salary==='') ? '' : '?';
+      let queryDepartment = searchingFields.department ? `department=${searchingFields.department}` : '';
+      let queryLastname = searchingFields.lastname ? `${(queryStart && queryDepartment) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
+      let querySpeciality = searchingFields.speciality ? `${(queryStart && (queryDepartment ||  queryLastname)) ? '&' : ''}speciality=${searchingFields.speciality}` : '';
+      let querySalary = searchingFields.salary ? `${(queryStart && (queryDepartment ||  queryLastname || querySpeciality)) ? '&' : ''}salary=${searchingFields.salary}` : '';
+      let queryStr = `/api/doctor/find${queryStart}${queryDepartment}${queryLastname}${querySpeciality}${querySalary}`;
       console.log(queryStr);
       axios.get(queryStr)
       .then(response => {
-        this.records = response.data
+        this.records = [];
+        response.data.forEach(item => {
+            this.records.push({
+            id: item.id,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            speciality: item.speciality,
+            salary: item.salary,
+            numberOfPatientsDuringCurrentMonth: item.numberOfPatientsDuringCurrentMonth,
+            department: item.department.name
+          })
+        });
         this.setupPagination(this.records)
       })
       .catch(error => {

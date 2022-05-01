@@ -2,20 +2,20 @@
   <form class="col s12 search-form">
     <div class="row">
       <div class="input-field col s2">
-        <input v-model="serachFields.patientFirstname" id="patient-first-name" type="text" class="validate">
-        <label for="patient-first-name">Имя пациента</label>
+        <input v-model="serachFields.medication" id="medication" type="text" class="validate">
+        <label for="medication">Медикамент</label>
       </div>
       <div class="input-field col s3">
-        <input v-model="serachFields.patientLastname" id="patient-last-name" type="text" class="validate">
-        <label for="patient-last-name">Фамилия пациента</label>
+        <input v-model="serachFields.department" id="department" type="text" class="validate">
+        <label for="department">Отдел</label>
       </div>
       <div class="input-field col s2">
-        <input v-model="serachFields.doctorFirstname" id="doctor-first-name" type="text" class="validate">
-        <label for="doctor-first-name">Имя доктора</label>
+        <input v-model="serachFields.date" id="date" type="text" class="validate">
+        <label for="date">Дата</label>
       </div>
       <div class="input-field col s3">
-        <input v-model="serachFields.doctorLastname" id="doctor-last-name" type="text" class="validate">
-        <label for="doctor-last-name">Фамилия доктора</label>
+        <input v-model="serachFields.cost" id="cost" type="number" class="validate">
+        <label for="cost">Мин. цена</label>
       </div>
         <a @click.prevent = "search" class="btn-floating btn-large waves-effect waves-light purple darken-1 search-btn">
             <i class="material-icons">search</i>
@@ -28,10 +28,10 @@
 export default{
   data: () => ({
 		serachFields: {
-			patientFirstname: '',
-			patientLastname: '',
-            doctorFirstname: '',
-            doctorLastname: '',
+			medication: '',
+			department: '',
+      date: '',
+      cost: '',
 		}
   }),
 	methods:{

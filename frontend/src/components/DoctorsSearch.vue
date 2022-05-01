@@ -1,10 +1,6 @@
 <template>
   <form class="col s12 search-form">
     <div class="row">
-      <div class="input-field col s2">
-        <input v-model="serachFields.firstname" id="first-name" type="text" class="validate">
-        <label for="first-name">Имя</label>
-      </div>
       <div class="input-field col s3">
         <input v-model="serachFields.lastname" id="last-name" type="text" class="validate">
         <label for="last-name">Фамилия</label>
@@ -17,6 +13,10 @@
         <input v-model="serachFields.salary" id="salary" type="number" class="validate">
         <label for="salary">Минимальная зарплата</label>
       </div>
+      <div class="input-field col s2">
+        <input v-model="serachFields.department" id="department" type="text" class="validate">
+        <label for="department">Отдел</label>
+      </div>
         <a @click.prevent = "search" class="btn-floating btn-large waves-effect waves-light purple darken-1 search-btn">
             <i class="material-icons">search</i>
         </a>
@@ -28,10 +28,10 @@
 export default{
   data: () => ({
 		serachFields: {
-			firstname: '',
 			lastname: '',
-            speciality: '',
-            salary: '',
+      speciality: '',
+      salary: '',
+      department: '',
 		}
   }),
 	methods:{

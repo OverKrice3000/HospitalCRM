@@ -109,10 +109,11 @@ export default {
       })
     },
     search(searchingFields) {
-      let queryStart = (searchingFields.firstname==='' && searchingFields.lastname==='') ? '' : '?';
-      let queryFirstname = searchingFields.firstname ? `firstname=${searchingFields.firstname}` : '';
-      let queryLastname = searchingFields.lastname ? `${(queryStart && queryFirstname) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
-      let queryStr = `/api/patient/find${queryStart}${queryFirstname}${queryLastname}`;
+      let queryStart = (searchingFields.firstname==='' && searchingFields.lastname==='' && searchingFields.department==='') ? '' : '?';
+      let queryName = searchingFields.firstname ? `firstname=${searchingFields.firstname}` : '';
+      let queryLastname = searchingFields.lastname ? `${(queryStart && queryName) ? '&' : ''}lastname=${searchingFields.lastname}` : '';
+      let queryDepartment = searchingFields.department ? `${(queryStart && (queryName ||  queryLastname)) ? '&' : ''}department=${searchingFields.department}` : '';
+      let queryStr = `/api/patient/find${queryStart}${queryName}${queryLastname}${queryDepartment}`;
        axios.get(queryStr)
       .then(response => {
         this.records = response.data

@@ -19,9 +19,9 @@
     <el-form-item label="Зарплата" prop="salary">
       <el-input v-model="doctorsForm.salary" type="number"></el-input>
     </el-form-item>
-    <!-- <el-form-item label="Отдел" prop="department">
+    <el-form-item label="Отдел" prop="department">
       <el-input v-model="doctorsForm.department" type="text"></el-input>
-    </el-form-item> -->
+    </el-form-item>
     <el-form-item>
       <el-button v-if="isEdit" @click="submitForm('doctorsForm')" plain>Редактировать</el-button>
       <el-button v-else @click="submitForm('doctorsForm')" plain>Добавить</el-button>
@@ -43,25 +43,25 @@ export default {
         lastname: '',
         speciality: '',
         salary: '',
-        //department: '',
+        department: '',
       },
       rules: {
         firstname: [{ required: true, message: 'Пожалуйста, введите имя доктора', trigger: 'blur' }],
         lastname: [{ required: true, message: 'Пожалуйста, введите фамилию доктора', trigger: 'blur' }],
         speciality: [{ required: true, message: 'Пожалуйста, введите специальность', trigger: 'blur' }],
         salary: [{ required: true, message: 'Пожалуйста, введите зарплату', trigger: 'blur' }],
-        //department: [{ required: true, message: 'Пожалуйста, введите отдел', trigger: 'blur' }],
+        department: [{ required: true, message: 'Пожалуйста, введите отдел', trigger: 'blur' }],
       }
     }
   },
   updated() {
     this.$nextTick(function () {
       if (Object.keys(this.recordForEdit).length !== 0) {
-        this.doctorsForm.firstname = this.recordForEdit.firstName; // какие ключи в базе
+        this.doctorsForm.firstname = this.recordForEdit.firstName;
         this.doctorsForm.lastname = this.recordForEdit.lastName; 
         this.doctorsForm.speciality = this.recordForEdit.speciality;
         this.doctorsForm.salary = this.recordForEdit.salary; 
-        //this.doctorsForm.department = this.recordForEdit.numberOfPatientsDuringCurrentMonth; 
+        this.doctorsForm.department = this.recordForEdit.department; 
         this.isEdit=true;
       }
     })

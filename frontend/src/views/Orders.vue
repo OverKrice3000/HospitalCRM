@@ -4,7 +4,7 @@
       <div class="page-title">
         <h3>Заказы</h3>
       </div>
-      <AppointmentsSearch @searchClick="search"/>
+      <OrdersSearch @searchClick="search"/>
       <center>
         <a class="btn-floating btn-large waves-effect waves-circle waves-light blue show-form-btn" @click.prevent="showEditForm = !showEditForm">
           <i v-if="!showEditForm" class="large material-icons">arrow_drop_down</i>
@@ -39,7 +39,7 @@ import paginationMixin from '@/mixins/paginat.mixin.js'
 import Table from '@/components/Table'
 import Loader from '@/components/Loader'
 import OrdersForm from '@/components/OrdersForm'
-import AppointmentsSearch from '@/components/AppointmentsSearch'
+import OrdersSearch from '@/components/OrdersSearch'
 export default {
   name: 'orders',
   mixins: [paginationMixin],
@@ -155,26 +155,24 @@ export default {
       })
     },
     search(searchingFields) {
-      let queryStart = (searchingFields.doctorFirstname==='' && searchingFields.doctorLastname==='' && searchingFields.patientFirstname==='' && searchingFields.patientLastname==='') ? '' : '?';
-      let queryPatientFirstname = searchingFields.patientFirstname ? `patientfirstname=${searchingFields.patientFirstname}` : '';
-      let queryPatientLastname = searchingFields.patientLastname ? `${(queryStart && queryPatientFirstname) ? '&' : ''}patientlastname=${searchingFields.patientLastname}` : '';
-      let queryDoctorFirstname = searchingFields.doctorFirstname ? `${(queryStart && (queryPatientFirstname ||  queryPatientLastname)) ? '&' : ''}doctorfirstname=${searchingFields.doctorFirstname}` : '';
-      let queryDoctorLastname = searchingFields.doctorLastname ? `${(queryStart && (queryPatientFirstname ||  queryPatientLastname || queryDoctorFirstname)) ? '&' : ''}doctorlastname=${searchingFields.doctorLastname}` : '';
-      let queryStr = `/api/appointment/find${queryStart}${queryPatientFirstname}${queryPatientLastname}${queryDoctorFirstname}${queryDoctorLastname}`;
+      let queryStart = (searchingFields.medication==='' && searchingFields.department==='' && searchingFields.date==='' && searchingFields.cost==='') ? '' : '?';
+      let querydate = searchingFields.date ? `date=${searchingFields.date}` : '';
+      let querycost = searchingFields.cost ? `${(queryStart && querydate) ? '&' : ''}cost=${searchingFields.cost}` : '';
+      let querymedication = searchingFields.medication ? `${(queryStart && (querydate ||  querycost)) ? '&' : ''}medication=${searchingFields.medication}` : '';
+      let querydepartment = searchingFields.department ? `${(queryStart && (querydate ||  querycost || querymedication)) ? '&' : ''}department=${searchingFields.department}` : '';
+      let queryStr = `/api/supply/find${queryStart}${querydate}${querycost}${querymedication}${querydepartment}`;
       console.log(queryStr);
       axios.get(queryStr)
       .then(response => {
         this.supplies = [];
         response.data.forEach((item) => {
-          let patient = this.patients.find(patient => patient.id === item.id.patientId);
-          let doctor = this.doctors.find(doctor => doctor.id === item.id.doctorId);
-          this.supplies.push({
-              patientName: patient.firstName,
-              patientLastName: patient.lastName,
-              date: item.date.slice(0,10),
-              cost: item.cost,
-              doctorName: doctor.firstName,
-              doctorLastName: doctor.lastName,
+        this.supplies.push({
+            id: item.id,
+            medication: item.medication.name,
+            date: item.date.slice(0,10),
+            supplySize: item.supplySize,
+            totalCost: item.totalCost,
+            department: item.department.name,
           })
         })
         this.setupPagination(this.supplies)
@@ -192,7 +190,7 @@ export default {
     },
   },
   components: {
-    Table, Loader, OrdersForm, AppointmentsSearch
+    Table, Loader, OrdersForm, OrdersSearch
   }
 }
 </script>
