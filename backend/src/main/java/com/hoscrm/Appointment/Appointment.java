@@ -9,6 +9,7 @@ import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -31,13 +32,13 @@ public class Appointment implements Serializable {
     private Patient patient;
 
     @ReceiveNotNull
-    private Date date;
+    private LocalDate date;
     @ReceiveNotNull
     private Double cost;
 
     public Appointment(){}
 
-    public Appointment(Doctor doctor, Patient patient, Date date, Double cost) {
+    public Appointment(Doctor doctor, Patient patient, LocalDate date, Double cost) {
         this.doctor = doctor;
         this.patient = patient;
         this.date = date;
@@ -68,12 +69,12 @@ public class Appointment implements Serializable {
         this.patient = patient;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
     @JsonDeserialize(using = JsonDateDeserializer.class)
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

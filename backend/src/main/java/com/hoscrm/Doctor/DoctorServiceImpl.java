@@ -33,7 +33,7 @@ public class DoctorServiceImpl implements DoctorService{
             throw new ConstraintViolationException("Unique constraint violation: Doctor with such first name and last name already exists");
         return rep.save(doctor);
     }
-
+    //TODO doctor salary to department cost
     public Optional<Doctor> getDoctorById(Long id){
         return rep.findById(id);
     }

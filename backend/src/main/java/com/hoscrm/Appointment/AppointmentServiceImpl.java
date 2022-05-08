@@ -1,5 +1,6 @@
 package com.hoscrm.Appointment;
 
+import com.hoscrm.Department.DepartmentRepository;
 import com.hoscrm.Doctor.Doctor;
 import com.hoscrm.Doctor.DoctorRepository;
 import com.hoscrm.Doctor.DoctorServiceImpl;
@@ -18,11 +19,13 @@ import java.util.Optional;
 public class AppointmentServiceImpl implements AppointmentService {
     AppointmentRepository aRep;
     DoctorRepository dRep;
+    DepartmentRepository ddRep;
     PatientRepository pRep;
     DoctorServiceImpl dService;
-    public AppointmentServiceImpl(AppointmentRepository aRep, DoctorRepository dRep, PatientRepository pRep, DoctorServiceImpl dService){
+    public AppointmentServiceImpl(AppointmentRepository aRep, DepartmentRepository ddRep, DoctorRepository dRep, PatientRepository pRep, DoctorServiceImpl dService){
         this.aRep = aRep;
         this.dRep = dRep;
+        this.ddRep = ddRep;
         this.pRep = pRep;
         this.dService = dService;
     }
@@ -39,7 +42,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                         AppointmentSpecifications.hasEqualDepartment(department)
                         ))))))));
     }
-
     public Appointment addAppointment(Appointment info) throws NoSuchElementInDatabaseException{
         Optional<Doctor> d = dRep.findById(info.getId().getDoctorId());
         Optional<Patient> p = pRep.findById(info.getId().getPatientId());
@@ -51,18 +53,27 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new ConstraintViolationException("Primary key constraint violation! An appointment with given primary" +
                     " key already exists: {" + info.getId().getDoctorId() + ", " + info.getId().getPatientId() + "}");
         d.get().setNumberOfPatientsDuringCurrentMonth(d.get().getNumberOfPatientsDuringCurrentMonth() + 1);
+        d.get().getDepartment().setNumberOfPatientsDuringMonth(d.get().getDepartment().getNumberOfPatientsDuringMonth() + 1);
+        d.get().getDepartment().setIncomeDuringMonth(d.get().getDepartment().getIncomeDuringMonth() + info.getCost());
+        ddRep.save(d.get().getDepartment());
         return aRep.save(new Appointment(d.get(), p.get(), info.getDate(), info.getCost()));
     }
 
     public Appointment updateAppointment(Appointment appointment){
-        if(aRep.existsById(appointment.getId()))
-            return aRep.save(appointment);
-        return null;
+        Optional<Appointment> old = aRep.findById(appointment.getId());
+        if(old.isEmpty())
+            return null;
+        old.get().getDoctor().getDepartment().setConsumptionDuringMonth(old.get().getDoctor().getDepartment().getConsumptionDuringMonth() - old.get().getCost() + appointment.getCost());
+        ddRep.save(old.get().getDoctor().getDepartment());
+        return aRep.save(appointment);
     }
 
     public boolean deleteAppointmentById(AppointmentId id){
-        if(!aRep.existsById(id))
+        Optional<Appointment> old = aRep.findById(id);
+        if(old.isEmpty())
             return false;
+        old.get().getDoctor().getDepartment().setConsumptionDuringMonth(old.get().getDoctor().getDepartment().getConsumptionDuringMonth() - old.get().getCost());
+        ddRep.save(old.get().getDoctor().getDepartment());
         aRep.deleteById(id);
         return true;
     }

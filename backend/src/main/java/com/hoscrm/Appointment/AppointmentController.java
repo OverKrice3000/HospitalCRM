@@ -6,6 +6,7 @@ import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
 import com.hoscrm.Validators.NotNullParameterInRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,7 +38,8 @@ public class AppointmentController {
                                              @RequestParam(name="doctorlastname", required = false) String doctorLastName,
                                              @RequestParam(name="patientfirstname", required = false) String patientFirstName,
                                              @RequestParam(name="patientlastname", required = false) String patientLastName,
-                                             @RequestParam(name="date", required = false) LocalDate date,
+                                             @RequestParam(name="date", required = false)
+                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                              @RequestParam(name="cost", required = false) Double minimumCost,
                                              @RequestParam(name="department", required = false) String department){
         try{
