@@ -1,10 +1,13 @@
 package com.hoscrm.Supply;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.hoscrm.Department.Department;
+import com.hoscrm.Deserializers.JsonDateDeserializer;
 import com.hoscrm.Medication.Medication;
 import com.hoscrm.annotations.ReceiveNotNull;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,7 +28,7 @@ public class Supply {
 
     @Column(name="supplyDate", nullable = false)
     @ReceiveNotNull
-    private Date date;
+    private LocalDate date;
 
     @ManyToOne(targetEntity = Medication.class, fetch = FetchType.EAGER)
     @JoinColumn(referencedColumnName = "id", name = "supplyMedication", nullable = false)
@@ -45,11 +48,12 @@ public class Supply {
         return id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    @JsonDeserialize(using = JsonDateDeserializer.class)
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -89,7 +93,7 @@ public class Supply {
         this.department = department;
     }
 
-    public Supply(Integer supplySize, Medication medication, Department department, Date date) {
+    public Supply(Integer supplySize, Medication medication, Department department, LocalDate date) {
         this.supplySize = supplySize;
         this.medication = medication;
         this.date = date;

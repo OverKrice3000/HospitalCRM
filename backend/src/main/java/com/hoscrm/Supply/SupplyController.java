@@ -6,6 +6,7 @@ import com.hoscrm.Exceptions.NotNullParameterAbsentException;
 import com.hoscrm.Exceptions.UnexpectedUrlParameterException;
 import com.hoscrm.Validators.NotNullParameterInRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,8 @@ public class SupplyController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findSupply(@RequestParam(name="medication", required = false) String medicament,
                                             @RequestParam(name="department", required = false) String department,
-                                            @RequestParam(name="date", required = false) LocalDate date,
+                                            @RequestParam(name="date", required = false)
+                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                             @RequestParam(name="cost", required = false) Double cost){
         try{
             request.getParameterMap().forEach((s, ss) -> {

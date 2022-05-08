@@ -35,9 +35,9 @@ public class DatabaseInsertorAtStart {
         Medication Analgin = new Medication("Analgin", "Microsoft", 2000.);
         mRep.saveAll(List.of(ibyprofen, aktivirovanniyYgol, Analgin));
 
-        Supply s1 = new Supply(500, ibyprofen, d192586, new java.util.Date());
-        Supply s2 = new Supply(2000000, aktivirovanniyYgol, d915386,  new java.util.Date());
-        Supply s3 = new Supply(1000, Analgin, d505013,  new java.util.Date());
+        Supply s1 = new Supply(500, ibyprofen, d192586, LocalDate.parse("2027-05-28"));
+        Supply s2 = new Supply(2000000, aktivirovanniyYgol, d915386,  LocalDate.parse("2097-01-01"));
+        Supply s3 = new Supply(1000, Analgin, d505013,  LocalDate.parse("2022-03-30"));
         sRep.saveAll(List.of(s1, s2, s3));
 
         Patient anna = new Patient("Anna", "Karlova", (short) 32);
