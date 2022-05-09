@@ -55,6 +55,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         d.get().setNumberOfPatientsDuringCurrentMonth(d.get().getNumberOfPatientsDuringCurrentMonth() + 1);
         d.get().getDepartment().setNumberOfPatientsDuringMonth(d.get().getDepartment().getNumberOfPatientsDuringMonth() + 1);
         d.get().getDepartment().setIncomeDuringMonth(d.get().getDepartment().getIncomeDuringMonth() + info.getCost());
+        dRep.save(d.get());
         ddRep.save(d.get().getDepartment());
         return aRep.save(new Appointment(d.get(), p.get(), info.getDate(), info.getCost()));
     }

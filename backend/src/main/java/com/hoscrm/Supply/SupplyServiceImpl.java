@@ -48,6 +48,7 @@ public class SupplyServiceImpl implements SupplyService {
         info.setDepartment(department.get());
         info.setMedication(medication.get());
         info.getDepartment().setConsumptionDuringMonth(info.getDepartment().getConsumptionDuringMonth() + totalCost);
+        dRep.save(info.getDepartment());
         info.setTotalCost(totalCost);
         return sRep.save(info);
     }
@@ -70,6 +71,7 @@ public class SupplyServiceImpl implements SupplyService {
         if(old.isEmpty())
             return false;
         old.get().getDepartment().setConsumptionDuringMonth(old.get().getDepartment().getConsumptionDuringMonth() - old.get().getTotalCost());
+        dRep.save(old.get().getDepartment());
         sRep.deleteById(id);
         return true;
     }
