@@ -12,9 +12,20 @@
           <button class="btn-small btn blue accent-1" @click="editRecord(record.id)">
               <i class="material-icons">edit</i>
           </button>
-          <button class="btn-small btn pink accent-1" @click="deleteRecord(record.id)">
+        <el-popconfirm
+          confirm-button-text="Да"
+          cancel-button-text="Нет"
+          :icon="InfoFilled"
+          icon-color="red"
+          title="Вы точно хотите удалить эту запись?"
+          @confirm="deleteRecord(record.id)"
+        >
+          <template #reference>
+            <button class="btn-small btn pink accent-1">
               <i class="material-icons">delete</i>
-          </button>
+            </button>
+          </template>
+        </el-popconfirm>
         </td>
         <!-- <td v-if="record.id==2">
           <button class="btn-small btn blue accent-1" @click="editRecord(record.id)">
@@ -31,6 +42,7 @@
 
 <script>
 //import axios from "axios";
+import { InfoFilled } from '@element-plus/icons-vue';
 export default {
   props: {
     records: {
