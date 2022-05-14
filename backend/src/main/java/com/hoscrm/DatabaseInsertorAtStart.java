@@ -61,7 +61,7 @@ public class DatabaseInsertorAtStart {
         pServ.addPatient(nataly);
 
         Doctor grigory = new Doctor("Grigory", "London", "Surgeon", 120000., d192586);
-        Doctor kollega = new Doctor("Kollega", "Kollega", "Devops", Double.MAX_VALUE / 2, d505013);
+        Doctor kollega = new Doctor("Kollega", "Kollega", "Devops", 3000, d505013);
         Doctor lesha = new Doctor("Lesha", "Ivanov", "Therapist", 40000., d915386);
         dServ.addDoctor(grigory);
         dServ.addDoctor(kollega);
