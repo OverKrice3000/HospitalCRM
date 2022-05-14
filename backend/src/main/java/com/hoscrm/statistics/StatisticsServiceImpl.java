@@ -42,7 +42,7 @@ public class StatisticsServiceImpl {
         newStats.setTopBusyDoctor(dRep.findFirstByOrderByNumberOfPatientsDuringCurrentMonthDesc());
         newStats.setTotalIncome(ddRep.sumAllIncomes());
         newStats.setTotalCost(ddRep.sumAllCosts() + dRep.sumAllSalaries());
-        ddRep.nullifyStatistics();
+        //ddRep.nullifyStatistics();
         sRep.save(newStats);
         return sRep.findAllByOrderByDateDesc();
     }
