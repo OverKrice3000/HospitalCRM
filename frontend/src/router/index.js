@@ -43,6 +43,12 @@ const routes = [
     meta: {layout: 'main'},
     component: () => import('../views/Medicine')
   },
+  {
+    path: '/statistic',
+    name: 'statistic',
+    meta: {layout: 'main'},
+    component: () => import('../views/Statistic')
+  },
 ]
 
 const router = createRouter({

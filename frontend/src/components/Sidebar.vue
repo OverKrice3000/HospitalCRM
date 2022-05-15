@@ -23,6 +23,7 @@ export default {
             {title: 'Отделы', url: '/departments'},
             {title: 'Заказы', url: '/orders'},
             {title: 'Медикаменты', url: '/medicine'},
+            {title: 'Статистика', url: '/statistic'},
         ]
     })
 }
