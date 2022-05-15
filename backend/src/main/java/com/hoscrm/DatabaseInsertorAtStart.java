@@ -47,8 +47,8 @@ public class DatabaseInsertorAtStart {
         mServ.addMedication(Analgin);
 
         Supply s1 = new Supply(500, ibyprofen, d192586, LocalDate.parse("2027-05-28"));
-        Supply s2 = new Supply(2000000, aktivirovanniyYgol, d915386,  LocalDate.parse("2097-01-01"));
-        Supply s3 = new Supply(1000, Analgin, d505013,  LocalDate.parse("2022-03-30"));
+        Supply s2 = new Supply(2000, aktivirovanniyYgol, d915386,  LocalDate.parse("2097-01-01"));
+        Supply s3 = new Supply(120, Analgin, d505013,  LocalDate.parse("2022-03-30"));
         sServ.addSupply(s1);
         sServ.addSupply(s2);
         sServ.addSupply(s3);
